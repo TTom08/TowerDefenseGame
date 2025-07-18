@@ -1,3 +1,5 @@
+import os.path
+
 import pygame
 
 class Game:
@@ -10,6 +12,7 @@ class Game:
         self.towers = []
         self.lives = 10
         self.money = 200
+        self.background = pygame.image.load(os.path.join("towers", "map.png"))
 
     def run(self):
         run = True
@@ -20,3 +23,7 @@ class Game:
                     run = False
 
         pygame.quit()
+
+    def draw(self):
+        self.win.blit(self.background, (0,0))
+        pygame.display.update()
