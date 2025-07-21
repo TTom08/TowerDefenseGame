@@ -32,6 +32,15 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pass
+
+            # Iterate through enemies - to list
+            to_delete = []
+            for e in self.enemies:
+                if e.path_pos >= len(e.path) - 1:
+                    to_delete.append(e)
+            # Delete enemy once its off screen
+            for d in to_delete:
+                self.enemies.remove(d)
                     
             self.draw()
 
