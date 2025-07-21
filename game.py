@@ -38,7 +38,7 @@ class Game:
             (160, 112)
         )
 
-        self.crossbow_pos = (self.game_width + 30, 40)
+        self.crossbow_pos = (self.game_width + 30, 33)
         self.crossbow_rect = pygame.Rect(
             self.crossbow_pos[0],
             self.crossbow_pos[1],
