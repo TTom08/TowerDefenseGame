@@ -17,7 +17,6 @@ class Game:
             pygame.image.load(os.path.join("assets","other", "map.png")),
             (self.width, self.height)
         )
-        # self.clicks = []   used for mapping enemy path
 
     def run(self):
         run = True
@@ -32,8 +31,6 @@ class Game:
                 pos = pygame.mouse.get_pos()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # self.clicks.append(pos)      also used for mapping enemy path
-                    # print(self.clicks)
                     pass
                     
             self.draw()
@@ -42,8 +39,14 @@ class Game:
 
     def draw(self):
         self.window.blit(self.background, (0,0))
-        # for p in self.clicks:
-            # pygame.draw.circle(self.window, (255,0,0), (p[0], p[1]), 5, 0)      used for mapping enemy path
+
+        # Displaying enemies
+        for e in self.enemies:
+            e.draw(self.window)
+
+        # Display path points
+        #for point in self.enemies[0].path:
+        #    pygame.draw.circle(self.window, (255, 0, 0), point, 5)
         pygame.display.update()
 
 tower_game = Game()
