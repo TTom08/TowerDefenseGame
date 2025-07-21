@@ -5,7 +5,7 @@ from enemies.tabby import Tabby
 
 class Game:
     def __init__(self):
-        self.width = 1280
+        self.width = 1500
         self.height = 960
         self.window = pygame.display.set_mode((self.width, self.height))
 
@@ -15,7 +15,7 @@ class Game:
         self.money = 200
         self.background = pygame.transform.scale(
             pygame.image.load(os.path.join("assets","other", "map.png")),
-            (self.width, self.height)
+            (1280, 960)
         )
 
     def run(self):
