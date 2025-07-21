@@ -1,4 +1,4 @@
-# 2D Tower Defense Game made in Python
+# 2D Tower Defense Game
 
 Basic cat themed tower defense game made by using Python, PyGame library.
 
