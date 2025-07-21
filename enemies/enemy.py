@@ -49,6 +49,7 @@ class Enemy:
         move_x, move_y = (self.x + dirn[0] * self.move_count, self.y + dirn[1] * self.move_count)
         self.dis += math.sqrt((move_x - x1) ** 2 + (move_y - y1) ** 2)
 
+        # Move to the next path point
         if self.dis >= move_distance:
             self.dis = 0
             self.move_count = 0

@@ -1,13 +1,15 @@
 import os.path
 import pygame
 
+from enemies.tabby import Tabby
+
 class Game:
     def __init__(self):
         self.width = 1280
         self.height = 960
         self.window = pygame.display.set_mode((self.width, self.height))
 
-        self.enemies = []
+        self.enemies = [Tabby()]
         self.towers = []
         self.lives = 10
         self.money = 200
