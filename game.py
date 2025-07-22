@@ -2,6 +2,7 @@ import os.path
 import pygame
 
 from enemies.tabby import Tabby
+from towers.crossbow import Crossbow
 
 
 class Game:
@@ -16,35 +17,32 @@ class Game:
         self.towers = []
         self.lives = 10
         self.money = 200
-        self.tool_images = []
+        self.selected_tool = None
 
+        # Game background
         self.background = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "other", "map.png")),
             (self.game_width, self.height)
         )
 
+        # Toolbar background
         self.toolbar_bg = pygame.Surface((self.toolbar_width, self.height))
         self.toolbar_bg = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "ui", "toolbar.png")),
             (self.toolbar_width, self.height)
         )
 
-        self.crossbow_img = pygame.transform.scale(
-                pygame.image.load(os.path.join("assets", "ui", "toolbar_crossbow.png")),
-                (160, 112)
-            )
-        self.crossbow_highlight = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "toolbar_crossbow_highlight.png")),
-            (160, 112)
-        )
+        self.available_towers = [
+            {
+                'class': Crossbow,
+                'icon': Crossbow.toolbar_icon,
+                'highlight': Crossbow.toolbar_highlight,
+                'pos': (self.game_width + 30, 33)
+            }
+        ]
 
-        self.crossbow_pos = (self.game_width + 30, 33)
-        self.crossbow_rect = pygame.Rect(
-            self.crossbow_pos[0],
-            self.crossbow_pos[1],
-            160, 112
-        )
-        self.crossbow_selected = False
+        for t in self.available_towers:
+            t['rect'] = pygame.Rect(t['pos'][0], t['pos'][1], 160, 112)
 
     def run(self):
         run = True
@@ -58,8 +56,15 @@ class Game:
                     run = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.crossbow_rect.collidepoint(mouse_pos):
-                        self.crossbow_selected = not self.crossbow_selected
+                    for t in self.available_towers:
+                        if t['rect'].collidepoint(mouse_pos):
+                            self.selected_tool = t['class'] if self.selected_tool != t['class'] else None
+                            break
+                    else:
+                        # Place tower on map if selected
+                        if self.selected_tool and mouse_pos[0] < self.game_width:
+                            self.towers.append(self.selected_tool(mouse_pos[0], mouse_pos[1]))
+                            self.selected_tool = None
 
             # Iterate through enemies - to list
             to_delete = []
@@ -79,21 +84,37 @@ class Game:
 
         self.window.blit(self.toolbar_bg, (self.game_width, 0))
 
-        # Displaying enemies
         for e in self.enemies:
             e.draw(self.window)
 
-        self.window.blit(self.crossbow_img, self.crossbow_pos)
+        for t in self.available_towers:
+            self.window.blit(t['icon'], t['pos'])
+            if self.selected_tool == t['class']:
+                self.window.blit(t['highlight'], t['pos'])
 
-            # Highlight selected tool
-        if self.crossbow_selected:
-            self.window.blit(self.crossbow_highlight, self.crossbow_pos)
+        if self.selected_tool:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            print(self.selected_tool)
+            if mouse_x < self.game_width:
+                # Hovering tower image
+                preview_tower = self.selected_tool(mouse_x, mouse_y)
+
+                # Range circle around the tower
+                pygame.draw.circle(self.window, (0, 255, 0), (mouse_x, mouse_y), preview_tower.range, 1)
+
+                # Transparent preview image of the tower
+                preview_img = preview_tower.tower_imgs[preview_tower.level].copy()
+                preview_img.set_alpha(128)
+                rect = preview_img.get_rect(center=(mouse_x, mouse_y))
+                self.window.blit(preview_img, rect)
+
+        for tower in self.towers:
+            tower.draw(self.window)
 
         # Display path points
         # for point in self.enemies[0].path:
         #    pygame.draw.circle(self.window, (255, 0, 0), point, 5)
         pygame.display.update()
-
 
 tower_game = Game()
 tower_game.run()

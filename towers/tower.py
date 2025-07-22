@@ -7,17 +7,23 @@ class Tower:
         self.width = 0
         self.height = 0
         self.price = 0
-        self.level = 1
+        self.level = 0
         self.selected = False
         self.menu = None
-        self.tower_imgs = []
+        self.range = 100
 
     def draw(self, window):
         img = self.tower_imgs[self.level]
-        window.blit(img, self.x-img.get_width()//2, self.y-img.get_height()//2)
+        rect = img.get_rect(center=(self.x, self.y))
+        window.blit(img, rect)
 
-    def click(self, X, Y):
-        if X <= self.x + self.width and X >= self.x:
-            if Y <= self.y + self.height and Y >= self.y:
-                return True
-        return False
+        if self.selected:
+            self.draw_range(window)
+
+    def draw_range(self, window):
+        pygame.draw.circle(window, (0, 255, 0), (self.x, self.y), self.range, 2)
+
+    def click(self, x, y):
+        img = self.tower_imgs[self.level]
+        rect = img.get_rect(center=(self.x, self.y))
+        return rect.collidepoint(x, y)
