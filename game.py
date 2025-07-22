@@ -84,6 +84,9 @@ class Game:
 
         self.window.blit(self.toolbar_bg, (self.game_width, 0))
 
+        for tower in self.towers:
+            tower.draw(self.window)
+
         for e in self.enemies:
             e.draw(self.window)
 
@@ -107,9 +110,6 @@ class Game:
                 preview_img.set_alpha(128)
                 rect = preview_img.get_rect(center=(mouse_x, mouse_y))
                 self.window.blit(preview_img, rect)
-
-        for tower in self.towers:
-            tower.draw(self.window)
 
         # Display path points
         # for point in self.enemies[0].path:
