@@ -95,21 +95,24 @@ class Game:
             if self.selected_tool == t['class']:
                 self.window.blit(t['highlight'], t['pos'])
 
+        # Draw preview image of the tower whle hovering over the game area
         if self.selected_tool:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            print(self.selected_tool)
             if mouse_x < self.game_width:
-                # Hovering tower image
                 preview_tower = self.selected_tool(mouse_x, mouse_y)
-
-                # Range circle around the tower
-                pygame.draw.circle(self.window, (0, 255, 0), (mouse_x, mouse_y), preview_tower.range, 1)
-
-                # Transparent preview image of the tower
                 preview_img = preview_tower.tower_imgs[preview_tower.level].copy()
                 preview_img.set_alpha(128)
                 rect = preview_img.get_rect(center=(mouse_x, mouse_y))
                 self.window.blit(preview_img, rect)
+
+                # once its placed down
+                if preview_tower.tower_range_circle:
+                    self.window.blit(
+                        pygame.transform.scale(preview_tower.tower_range_circle,
+                                               (preview_tower.range, preview_tower.range)),
+                        (mouse_x - preview_tower.range // 2, mouse_y - preview_tower.range // 2)
+                    )
+
 
         # Display path points
         # for point in self.enemies[0].path:
