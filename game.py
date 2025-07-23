@@ -121,6 +121,7 @@ class Game:
                     preview_img.set_alpha(128)  # semi-transparent green
                 else:
                     preview_img.fill((255, 0, 0, 128), special_flags=pygame.BLEND_RGBA_MULT)
+                    preview_tower.tower_range_circle.fill((220, 35, 35, 144), special_flags=pygame.BLEND_RGBA_MULT)
                 rect = preview_img.get_rect(center=(mouse_x, mouse_y))
                 self.window.blit(preview_img, rect)
 
