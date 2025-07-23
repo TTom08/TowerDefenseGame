@@ -2,10 +2,12 @@ import os.path
 import pygame
 
 pygame.init()
+pygame.mixer.quit()
 
 window = pygame.display.set_mode((1500, 960))
 
 from enemies.tabby import Tabby
+from enemies.black import Black
 from towers.crossbow import Crossbow
 
 class Game:
@@ -16,11 +18,21 @@ class Game:
         self.height = 960
         self.window = pygame.display.set_mode((self.width, self.height))
 
-        self.enemies = [Tabby()]
-        self.towers = []
         self.lives = 10
         self.money = 200
         self.selected_tool = None
+        self.towers = []
+
+        self.enemies = [Tabby(), Black()]
+
+        self.available_towers = [
+            {
+                'class': Crossbow,
+                'icon': Crossbow.toolbar_icon,
+                'highlight': Crossbow.toolbar_highlight,
+                'pos': (self.game_width + 30, 33)
+            }
+        ]
 
         # Game background
         self.background = pygame.transform.scale(
@@ -35,21 +47,18 @@ class Game:
             (self.toolbar_width, self.height)
         )
 
+        # Start button
+        self.start_button = pygame.transform.scale(
+            pygame.image.load(os.path.join("assets", "ui", "start_btn.png")).convert_alpha(),
+            (198, 165)
+        )
+
         # Placement mask
         self.placement_mask = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "other", "placement_mask.png")).convert(),
             (self.game_width, self.height)
         )
         self.mask_pixels = pygame.PixelArray(self.placement_mask)
-
-        self.available_towers = [
-            {
-                'class': Crossbow,
-                'icon': Crossbow.toolbar_icon,
-                'highlight': Crossbow.toolbar_highlight,
-                'pos': (self.game_width + 30, 33)
-            }
-        ]
 
         for t in self.available_towers:
             t['rect'] = pygame.Rect(t['pos'][0], t['pos'][1], 160, 112)
@@ -103,6 +112,8 @@ class Game:
 
         self.window.blit(self.toolbar_bg, (self.game_width, 0))
 
+
+
         for tower in self.towers:
             tower.draw(self.window)
 
@@ -140,6 +151,8 @@ class Game:
         # Display path points
         # for point in self.enemies[0].path:
         #    pygame.draw.circle(self.window, (255, 0, 0), point, 5)
+
+        self.window.blit(self.start_button, (1292, 784))
 
         pygame.display.update()
 

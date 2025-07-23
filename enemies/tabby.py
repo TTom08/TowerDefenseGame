@@ -13,5 +13,5 @@ class Tabby(Enemy):
     ]
 
     def __init__(self):
-        super().__init__(animation_speed=10)
+        super().__init__(animation_speed=10, movement_speed=3)
         self.imgs = Tabby.imgs
