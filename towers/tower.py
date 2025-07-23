@@ -12,7 +12,7 @@ class Tower:
         self.range = 100
 
         self.tower_range_circle = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "towers", "range_circle_64.png")),
+            pygame.image.load(os.path.join("assets", "towers", "range_circle_64.png")).convert_alpha(),
             (self.range, self.range)
         )
         self.tower_range_circle.set_alpha(144) # semi-transparent tower range circle

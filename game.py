@@ -1,9 +1,12 @@
 import os.path
 import pygame
 
+pygame.init()
+
+window = pygame.display.set_mode((1500, 960))
+
 from enemies.tabby import Tabby
 from towers.crossbow import Crossbow
-
 
 class Game:
     def __init__(self):
@@ -21,20 +24,20 @@ class Game:
 
         # Game background
         self.background = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "other", "map.png")),
+            pygame.image.load(os.path.join("assets", "other", "map.png")).convert(),
             (self.game_width, self.height)
         )
 
         # Toolbar background
         self.toolbar_bg = pygame.Surface((self.toolbar_width, self.height))
         self.toolbar_bg = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "toolbar.png")),
+            pygame.image.load(os.path.join("assets", "ui", "toolbar.png")).convert(),
             (self.toolbar_width, self.height)
         )
 
         # Placement mask
         self.placement_mask = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "other", "placement_mask.png")),
+            pygame.image.load(os.path.join("assets", "other", "placement_mask.png")).convert(),
             (self.game_width, self.height)
         )
         self.mask_pixels = pygame.PixelArray(self.placement_mask)
