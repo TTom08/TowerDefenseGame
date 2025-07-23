@@ -32,6 +32,13 @@ class Game:
             (self.toolbar_width, self.height)
         )
 
+        # Placement mask
+        self.placement_mask = pygame.transform.scale(
+            pygame.image.load(os.path.join("assets", "other", "placement_mask.png")),
+            (self.game_width, self.height)
+        )
+        self.mask_pixels = pygame.PixelArray(self.placement_mask)
+
         self.available_towers = [
             {
                 'class': Crossbow,
@@ -61,10 +68,13 @@ class Game:
                             self.selected_tool = t['class'] if self.selected_tool != t['class'] else None
                             break
                     else:
-                        # Place tower on map if selected
+                        # Place tower on map if the area is buildable
                         if self.selected_tool and mouse_pos[0] < self.game_width:
-                            self.towers.append(self.selected_tool(mouse_pos[0], mouse_pos[1]))
-                            self.selected_tool = None
+                            if self.is_buildable(mouse_pos[0], mouse_pos[1]):
+                                self.towers.append(self.selected_tool(mouse_pos[0], mouse_pos[1]))
+                                self.selected_tool = None
+                            else:
+                                print("Invalid build location!")
 
             # Iterate through enemies - to list
             to_delete = []
@@ -78,6 +88,12 @@ class Game:
             self.draw()
 
         pygame.quit()
+
+    def is_buildable(self, x, y):
+        if 0 <= x < self.game_width and 0 <= y < self.height:
+            color = self.placement_mask.get_at((x, y))
+            return color[:3] == (255, 255, 255)  # White means its buildable
+        return False
 
     def draw(self):
         self.window.blit(self.background, (0, 0))
@@ -101,23 +117,28 @@ class Game:
             if mouse_x < self.game_width:
                 preview_tower = self.selected_tool(mouse_x, mouse_y)
                 preview_img = preview_tower.tower_imgs[preview_tower.level].copy()
-                preview_img.set_alpha(128)
+                if self.is_buildable(mouse_x, mouse_y):
+                    preview_img.set_alpha(128)  # semi-transparent green
+                else:
+                    preview_img.fill((255, 0, 0, 128), special_flags=pygame.BLEND_RGBA_MULT)
                 rect = preview_img.get_rect(center=(mouse_x, mouse_y))
                 self.window.blit(preview_img, rect)
 
-                # once its placed down
-                if preview_tower.tower_range_circle:
-                    self.window.blit(
-                        pygame.transform.scale(preview_tower.tower_range_circle,
-                                               (preview_tower.range, preview_tower.range)),
-                        (mouse_x - preview_tower.range // 2, mouse_y - preview_tower.range // 2)
-                    )
-
+                # Properly scaled tower range circle
+                scaled_circle = pygame.transform.scale(
+                    preview_tower.tower_range_circle, (2 * preview_tower.range, 2 * preview_tower.range)
+                )
+                # Display range while hovering the preview tower
+                self.window.blit(
+                    scaled_circle, (mouse_x - preview_tower.range, mouse_y - preview_tower.range)
+                )
 
         # Display path points
         # for point in self.enemies[0].path:
         #    pygame.draw.circle(self.window, (255, 0, 0), point, 5)
+
         pygame.display.update()
+
 
 tower_game = Game()
 tower_game.run()

@@ -24,8 +24,8 @@ class Tower:
         if self.selected:
             self.draw_range(window)
 
+    # Draws the range circle around the tower once its placed down
     def draw_range(self, window):
-
         if self.tower_range_circle:
             # used for centering
             window.blit(
@@ -34,7 +34,7 @@ class Tower:
                  self.y - self.tower_range_circle.get_height() // 2)
             )
 
-        pygame.draw.circle(window, (0, 255, 0), (self.x, self.y), self.range, 50)
+
 
     def click(self, x, y):
         img = self.tower_imgs[self.level]

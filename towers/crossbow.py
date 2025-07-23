@@ -26,6 +26,6 @@ class Crossbow(Tower):
     def __init__(self, x, y):
         super().__init__(x, y)
         self.tower_imgs = Crossbow.tower_imgs
-        self.range = 300
+        self.range = 150
         self.price = 150
 
