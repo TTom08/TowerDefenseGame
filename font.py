@@ -27,8 +27,16 @@ class Font:
             else:
                 current_char_width += 1
 
-    def render(self, surf, text, loc):
+    def render(self, surf, text, loc, scale=1):
         x_offset = 0
         for char in text:
-            surf.blit(self.characters[char], (loc[0] + x_offset, loc[1]))
-            x_offset += self.characters[char].get_width() + self.spacing
+            if char in self.characters:
+                char_img = self.characters[char]
+                if scale != 1:
+                    # Scaling the character image
+                    char_img = pygame.transform.scale(
+                        char_img,
+                        (int(char_img.get_width() * scale), int(char_img.get_height() * scale))
+                    )
+                surf.blit(char_img, (loc[0] + x_offset, loc[1]))
+                x_offset += char_img.get_width() + int(self.spacing * scale)

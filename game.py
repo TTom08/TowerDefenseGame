@@ -9,6 +9,7 @@ window = pygame.display.set_mode((1500, 960))
 from enemies.tabby import Tabby
 from enemies.black import Black
 from towers.crossbow import Crossbow
+from font import Font
 
 class Game:
     def __init__(self):
@@ -60,14 +61,30 @@ class Game:
         )
         self.mask_pixels = pygame.PixelArray(self.placement_mask)
 
+        # Statbar - lives and money
+        self.statbar_bg = pygame.transform.scale(
+            pygame.image.load(os.path.join("assets", "ui", "statbar.png")).convert_alpha(),
+            (600, 102)
+        )
+        self.statbar_heart = pygame.transform.scale(
+            pygame.image.load(os.path.join("assets", "ui", "heart.png")).convert_alpha(),
+            (50, 49.5)
+        )
+        self.statbar_coin = pygame.transform.scale(
+            pygame.image.load(os.path.join("assets", "ui", "coin.png")).convert_alpha(),
+            (26+(13*0.35), 38+(19*0.35))
+        )
+
+        self.my_font = Font("assets/ui/nums.png")
+
         for t in self.available_towers:
             t['rect'] = pygame.Rect(t['pos'][0], t['pos'][1], 160, 112)
 
     def run(self):
-        run = True
+        running = True
         clock = pygame.time.Clock()
 
-        while run:
+        while running:
             mouse_pos = pygame.mouse.get_pos()
             clock.tick(60)
             for event in pygame.event.get():
@@ -112,8 +129,6 @@ class Game:
 
         self.window.blit(self.toolbar_bg, (self.game_width, 0))
 
-
-
         for tower in self.towers:
             tower.draw(self.window)
 
@@ -153,6 +168,14 @@ class Game:
         #    pygame.draw.circle(self.window, (255, 0, 0), point, 5)
 
         self.window.blit(self.start_button, (1292, 784))
+
+        # Display lives and money on statbar
+        self.window.blit(self.statbar_bg, (5, 5))
+        self.window.blit(self.statbar_heart, (55, 30))
+        self.window.blit(self.statbar_coin, (300, 22))
+        # Test rendering numbers
+        self.my_font.render(self.window, str(self.lives), (120, 35), scale=3)
+        self.my_font.render(self.window, str(self.money), (350, 27), scale=2.5)
 
         pygame.display.update()
 
