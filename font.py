@@ -12,7 +12,7 @@ def clip(surf, x, y, x_size, y_size):
 class Font:
     def __init__(self, path):
         self.spacing = 1
-        self.character_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        self.character_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'R', 'O', 'U', 'N', 'D']
         font_img = pygame.image.load(path).convert_alpha()
         current_char_width = 0
         self.characters = {}

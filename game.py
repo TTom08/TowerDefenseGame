@@ -21,10 +21,12 @@ class Game:
 
         self.lives = 10
         self.money = 200
+        self.round = 0
         self.selected_tool = None
         self.towers = []
+        self.round_active = False
 
-        self.enemies = [Tabby(), Black()]
+        self.enemies = []
 
         self.available_towers = [
             {
@@ -53,6 +55,11 @@ class Game:
             pygame.image.load(os.path.join("assets", "ui", "start_btn.png")).convert_alpha(),
             (198, 165)
         )
+        # Pause button
+        self.pause_button = pygame.transform.scale(
+            pygame.image.load(os.path.join("assets", "ui", "pause_btn.png")).convert_alpha(),
+            (198, 165)
+        )
 
         # Placement mask
         self.placement_mask = pygame.transform.scale(
@@ -64,7 +71,7 @@ class Game:
         # Statbar - lives and money
         self.statbar_bg = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "ui", "statbar.png")).convert_alpha(),
-            (600, 102)
+            (900, 102)
         )
         self.statbar_heart = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "ui", "heart.png")).convert_alpha(),
@@ -75,10 +82,12 @@ class Game:
             (26+(13*0.35), 38+(19*0.35))
         )
 
-        self.my_font = Font("assets/ui/nums.png")
+        self.my_font = Font("assets/ui/font.png")
 
         for t in self.available_towers:
             t['rect'] = pygame.Rect(t['pos'][0], t['pos'][1], 160, 112)
+
+        self.start_button_rect = self.start_button.get_rect(topleft=(1292, 784))
 
     def run(self):
         running = True
@@ -89,13 +98,28 @@ class Game:
             clock.tick(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    run = False
+                    running = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for t in self.available_towers:
                         if t['rect'].collidepoint(mouse_pos):
                             self.selected_tool = t['class'] if self.selected_tool != t['class'] else None
                             break
+
+                    if self.start_button_rect.collidepoint(mouse_pos):
+                        if self.selected_tool:
+                            print("Please place a tower before starting the game!")
+                        else:
+                            if not self.round_active:
+                                # Start the round
+                                self.enemies.append(Tabby())
+                                self.enemies.append(Black())
+                                self.round += 1
+                                self.round_active = True
+                            else:
+                                # Pause the round
+                                self.round_active = False
+
                     else:
                         # Place tower on map if the area is buildable
                         if self.selected_tool and mouse_pos[0] < self.game_width:
@@ -167,7 +191,9 @@ class Game:
         # for point in self.enemies[0].path:
         #    pygame.draw.circle(self.window, (255, 0, 0), point, 5)
 
-        self.window.blit(self.start_button, (1292, 784))
+        # Display start and pause buttons
+        button_img = self.pause_button if self.round_active else self.start_button
+        self.window.blit(button_img, (1292, 784))
 
         # Display lives and money on statbar
         self.window.blit(self.statbar_bg, (5, 5))
@@ -176,6 +202,9 @@ class Game:
         # Test rendering numbers
         self.my_font.render(self.window, str(self.lives), (120, 35), scale=3)
         self.my_font.render(self.window, str(self.money), (350, 27), scale=2.5)
+        # Display rounds number
+        self.my_font.render(self.window, "ROUND", (580, 24), scale=3)
+        self.my_font.render(self.window, str(self.round), (770, 24), scale=3)
 
         pygame.display.update()
 
