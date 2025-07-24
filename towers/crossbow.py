@@ -1,6 +1,6 @@
 import os
-
 import pygame
+
 from towers.tower import Tower
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -9,11 +9,12 @@ window = pygame.display.set_mode((1500, 960))
 from enemies.tabby import Tabby
 from enemies.black import Black
 from towers.crossbow import Crossbow
+from towers.cannon import Cannon
 from font import Font
 
-"""
-This is a simple tower defense game where you can place towers to defend against waves of enemies.
-"""
+###
+# This is a simple tower defense game where you can place towers to defend against waves of enemies.
+###
 
 class Game:
     """
@@ -41,6 +42,12 @@ class Game:
                 'icon': Crossbow.toolbar_icon,
                 'highlight': Crossbow.toolbar_highlight,
                 'pos': (self.game_width + 30, 33)
+            },
+            {
+                'class': Cannon,
+                'icon': Cannon.toolbar_icon,
+                'highlight': Cannon.toolbar_highlight,
+                'pos': (self.game_width + 30, 160)
             }
         ]
 
@@ -82,7 +89,7 @@ class Game:
         )
         self.statbar_heart = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "ui", "heart.png")).convert_alpha(),
-            (50, 49.5)
+            (50, 47.5)
         )
         self.statbar_coin = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "ui", "coin.png")).convert_alpha(),
