@@ -135,7 +135,7 @@ class Game:
                     else:
                         # Place tower on map if the area is buildable
                         if self.selected_tool and mouse_pos[0] < self.game_width:
-                            if self.is_buildable(mouse_pos[0], mouse_pos[1]):
+                            if self.is_buildable(mouse_pos[0], mouse_pos[1]) and not self.is_overlapping(mouse_pos[0], mouse_pos[1]):
                                 self.towers.append(self.selected_tool(mouse_pos[0], mouse_pos[1]))
                                 self.selected_tool = None
                             else:
@@ -165,6 +165,16 @@ class Game:
             return color[:3] == (255, 255, 255)  # White means its buildable
         return False
 
+    def is_overlapping(self, x, y):
+        """
+        Checks if the given coordinates (x, y) overlap with any existing tower.
+        :param x: The x-coordinate to check.
+        :param y: The y-coordinate to check.
+        """
+        for tower in self.towers:
+            if tower.click(x, y):
+                return True
+        return False
 
     """
     Displays the game window and draws all the game elements such as towers, enemies, and UI.
@@ -191,8 +201,8 @@ class Game:
             if mouse_x < self.game_width:
                 preview_tower = self.selected_tool(mouse_x, mouse_y)
                 preview_img = preview_tower.tower_imgs[preview_tower.level].copy()
-                if self.is_buildable(mouse_x, mouse_y):
-                    preview_img.set_alpha(128)  # semi-transparent green
+                if self.is_buildable(mouse_x, mouse_y) and not self.is_overlapping(mouse_x, mouse_y):
+                    preview_img.set_alpha(128)
                 else:
                     preview_img.fill((255, 0, 0, 128), special_flags=pygame.BLEND_RGBA_MULT)
                     preview_tower.tower_range_circle.fill((220, 35, 35, 144), special_flags=pygame.BLEND_RGBA_MULT)
