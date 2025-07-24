@@ -15,11 +15,11 @@ def clip(surf, x, y, x_size, y_size):
     image = surf.subsurface(handle_surf.get_clip())
     return image.copy()  # Return a copy of the clipped surface
 
-"""
-A class representing a font renderer for displaying characters on a surface.
-:param path: The file path to the font image.
-"""
 class Font:
+    """
+    A class representing a font renderer for displaying characters on a surface.
+    :param path: The file path to the font image.
+    """
     def __init__(self, path):
         self.spacing = 1
         self.character_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'R', 'O', 'U', 'N', 'D']
@@ -37,14 +37,14 @@ class Font:
             else:
                 current_char_width += 1
 
-    """
-    Renders the specified text on the given surface at the specified location with an optional scale.
-    :param surf: The surface to render the text on.
-    :param text: The text to render.
-    :param loc: The location (x, y) where the text should be rendered.
-    :param scale: The scale factor for the text size (default is 1).
-    """
     def render(self, surf, text, loc, scale=1):
+        """
+        Renders the specified text on the given surface at the specified location with an optional scale.
+        :param surf: The surface to render the text on.
+        :param text: The text to render.
+        :param loc: The location (x, y) where the text should be rendered.
+        :param scale: The scale factor for the text size (default is 1).
+        """
         x_offset = 0
         for char in text:
             if char in self.characters:

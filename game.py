@@ -15,11 +15,10 @@ from font import Font
 This is a simple tower defense game where you can place towers to defend against waves of enemies.
 """
 
-
-"""
-This is the main game class that handles the game loop, events, and rendering.
-"""
 class Game:
+    """
+    This is the main game class that handles the game loop, events, and rendering.
+    """
     def __init__(self):
         self.game_width = 1280
         self.toolbar_width = 220
@@ -97,11 +96,11 @@ class Game:
 
         self.start_button_rect = self.start_button.get_rect(topleft=(1292, 784))
 
-    """ 
-    Initializes the game and sets up the necessary variables and assets. 
-    This method is called when the game is started.
-    """
     def run(self):
+        """
+        Initializes the game and sets up the necessary variables and assets.
+        This method is called when the game is started.
+        """
         running = True
         clock = pygame.time.Clock()
 
@@ -154,12 +153,12 @@ class Game:
 
         pygame.quit()
 
-    """
-    Checks if the given coordinates (x, y) are buildable for placing a tower.
-    :param x: The x-coordinate to check.
-    :param y: The y-coordinate to check.
-    """
     def is_buildable(self, x, y):
+        """
+            Checks if the given coordinates (x, y) are buildable for placing a tower.
+            :param x: The x-coordinate to check.
+            :param y: The y-coordinate to check.
+            """
         if 0 <= x < self.game_width and 0 <= y < self.height:
             color = self.placement_mask.get_at((x, y))
             return color[:3] == (255, 255, 255)  # White means its buildable
@@ -176,10 +175,10 @@ class Game:
                 return True
         return False
 
-    """
-    Displays the game window and draws all the game elements such as towers, enemies, and UI.
-    """
     def draw(self):
+        """
+        Displays the game window and draws all the game elements such as towers, enemies, and UI.
+        """
         self.window.blit(self.background, (0, 0))
 
         self.window.blit(self.toolbar_bg, (self.game_width, 0))
