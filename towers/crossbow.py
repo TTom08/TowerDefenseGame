@@ -5,6 +5,10 @@ from towers.tower import Tower
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+"""
+Crossbow tower class that represents a crossbow tower in the game.
+It inherits from the Tower class and sets specific properties for the crossbow tower.
+"""
 class Crossbow(Tower):
     tower_imgs = [
         pygame.transform.scale(

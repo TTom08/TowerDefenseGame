@@ -4,6 +4,10 @@ from enemies.enemy import Enemy
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+""" 
+Black enemy class that represents an armored black cat enemy in the game.
+It inherits from the Enemy class and sets specific properties for the black cat enemy.
+"""
 class Black(Enemy):
     imgs = [
         pygame.transform.scale(

@@ -1,6 +1,13 @@
 import pygame
 
-
+"""
+Clips a surface to a specified rectangle and returns a copy of the clipped surface.
+:param surf: The surface to clip.
+:param x: The x-coordinate of the top-left corner of the clipping rectangle.
+:param y: The y-coordinate of the top-left corner of the clipping rectangle.
+:param x_size: The width of the clipping rectangle.
+:param y_size: The height of the clipping rectangle.
+"""
 def clip(surf, x, y, x_size, y_size):
     handle_surf = surf.copy()
     clipR = pygame.Rect(x, y, x_size, y_size)
@@ -8,7 +15,10 @@ def clip(surf, x, y, x_size, y_size):
     image = surf.subsurface(handle_surf.get_clip())
     return image.copy()  # Return a copy of the clipped surface
 
-
+"""
+A class representing a font renderer for displaying characters on a surface.
+:param path: The file path to the font image.
+"""
 class Font:
     def __init__(self, path):
         self.spacing = 1
@@ -27,6 +37,13 @@ class Font:
             else:
                 current_char_width += 1
 
+    """
+    Renders the specified text on the given surface at the specified location with an optional scale.
+    :param surf: The surface to render the text on.
+    :param text: The text to render.
+    :param loc: The location (x, y) where the text should be rendered.
+    :param scale: The scale factor for the text size (default is 1).
+    """
     def render(self, surf, text, loc, scale=1):
         x_offset = 0
         for char in text:

@@ -1,6 +1,10 @@
 import pygame
 import os.path
 
+""" 
+Tower class that represents a tower in the game. It handles drawing the tower, its range, and detecting clicks on it. 
+It also manages the tower's level and price.
+"""
 class Tower:
     def __init__(self,x,y):
         self.x = x
@@ -17,6 +21,11 @@ class Tower:
         )
         self.tower_range_circle.set_alpha(144) # semi-transparent tower range circle
 
+    """
+    Draws the tower on the given window.
+    If the tower is selected it also draws the range circle around it.
+    :param window: The Pygame window where the tower will be drawn.
+    """
     def draw(self, window):
         img = self.tower_imgs[self.level]
         rect = img.get_rect(center=(self.x, self.y))
@@ -25,7 +34,10 @@ class Tower:
         if self.selected:
             self.draw_range(window)
 
-    # Draws the range circle around the tower once its placed down
+    """
+    Draws the range circle around the tower once its placed down.
+    :param window: The Pygame window where the range circle will be drawn.
+    """
     def draw_range(self, window):
         if self.tower_range_circle:
             # used for centering
@@ -35,8 +47,11 @@ class Tower:
                  self.y - self.tower_range_circle.get_height() // 2)
             )
 
-
-
+    """
+    Detects if the tower was clicked on by checking if the given coordinates (x, y) collide with the tower's rectangle.
+    :param x: The x-coordinate of the click.
+    :param y: The y-coordinate of the click.
+    """
     def click(self, x, y):
         img = self.tower_imgs[self.level]
         rect = img.get_rect(center=(self.x, self.y))

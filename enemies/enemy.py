@@ -1,6 +1,11 @@
 import pygame
 import math
 
+"""
+Enemy class that represents a generic enemy in the game.
+It handles enemy movement along a predefined path, enemy health, drawing the enemy on the screen,
+and detecting collisions with projectiles.
+"""
 class Enemy:
     imgs = []
 
@@ -21,6 +26,12 @@ class Enemy:
         self.move_distance = 0
         self.dis = 0
 
+    """
+    Draws the enemy on the given window.
+    It updates the enemy's image based on the current animation frame and moves the enemy along its path by calling
+    the move() method.
+    :param window: The Pygame window where the enemy will be drawn.
+    """
     def draw(self, window):
         self.img = self.imgs[self.animation_count // self.animation_speed]
         self.animation_count += 1
@@ -32,12 +43,20 @@ class Enemy:
         window.blit(self.img, (self.x - img_rect.width // 2, self.y - img_rect.height // 2 - 45))
         self.move()
 
+    """ 
+    Checks if the enemy collides with the given coordinates (X, Y).
+    :param X: The x-coordinate to check for collision.
+    :param Y: The y-coordinate to check for collision.
+    """
     def collide(self, X, Y):
         if X <= self.x + self.width and X >= self.x:
             if Y <= self.y + self.height and Y >= self.y:
                 return True
         return False
 
+    """
+    Moves the enemy along its predefined path.
+    """
     def move(self):
         if self.path_pos + 1 >= len(self.path):
             return False

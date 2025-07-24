@@ -4,6 +4,10 @@ from enemies.enemy import Enemy
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+"""
+Tabby enemy class that represents a tabby cat enemy in the game.
+It inherits from the Enemy class and sets specific properties for the tabby enemy.
+"""
 class Tabby(Enemy):
     imgs = [
         pygame.transform.scale(
