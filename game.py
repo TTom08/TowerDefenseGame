@@ -100,6 +100,8 @@ class Game:
 
         # Exit menu and its buttons
         self.exit_menu_active = False
+        self.exit_menu_scale = 0.0
+        self.exit_menu_target_scale = 0.0
         self.exit_menu_bg = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "ui", "exit_menu.png")).convert_alpha(),
             (500, 150)
@@ -170,16 +172,18 @@ class Game:
                             else:
                                 print("Not enough money to place this tower!")
 
-                    if self.exit_menu_active:
+                    if self.exit_menu_scale > 0.95:
                         if self.exit_btn_rect.collidepoint(mouse_pos):
                             running = False
                         elif self.continue_btn_rect.collidepoint(mouse_pos):
                             self.exit_menu_active = False
+                            self.exit_menu_target_scale = 0.0
 
                 # Show exit menu
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.exit_menu_active = not self.exit_menu_active
+                        self.exit_menu_target_scale = 1.0 if self.exit_menu_active else 0.0
 
             # Iterate through enemies - to list
             to_delete = []
@@ -277,16 +281,41 @@ class Game:
         self.my_font.render(self.window, "ROUND", (580, 24), scale=3)
         self.my_font.render(self.window, str(self.round), (770, 24), scale=3)
 
-        # Display exit menu if active
-        if self.exit_menu_active:
-            self.window.blit(self.exit_menu_bg, (self.game_width // 2 - 250, self.height // 2 - 75))
-            self.window.blit(self.exit_btn, (self.game_width // 2 - 195, self.height // 2 - 33))
-            self.window.blit(self.continue_btn, (self.game_width // 2 + 20, self.height // 2 - 33))
-            self.my_font.render(self.window, "EXIT", (self.game_width // 2 - 145, self.height // 2 - 10), scale=2)
-            self.my_font.render(self.window, "CONTINUE", (self.game_width // 2 + 45, self.height // 2 - 7), scale=1.5)
+        self.draw_exit_menu()
 
         pygame.display.update()
 
+    def draw_exit_menu(self):
+        # Display exit menu with transition
+        scale_speed = 0.3
+        if self.exit_menu_scale < self.exit_menu_target_scale:
+            self.exit_menu_scale += (self.exit_menu_target_scale - self.exit_menu_scale) * scale_speed
+        elif self.exit_menu_scale > self.exit_menu_target_scale:
+            self.exit_menu_scale -= (self.exit_menu_scale - self.exit_menu_target_scale) * scale_speed
+
+        if self.exit_menu_scale > 0:
+            scale = self.exit_menu_scale
+            base_x = self.game_width // 2
+            base_y = self.height // 2
+
+            # exit menu
+            scaled_bg = pygame.transform.smoothscale(self.exit_menu_bg, (int(500 * scale), int(150 * scale)))
+            bg_rect = scaled_bg.get_rect(center=(base_x, base_y))
+            self.window.blit(scaled_bg, bg_rect.topleft)
+
+            # exit button
+            scaled_exit_btn = pygame.transform.smoothscale(self.exit_btn, (int(175 * scale), int(66 * scale)))
+            exit_rect = scaled_exit_btn.get_rect(center=(base_x - 110 * scale, base_y))
+            self.window.blit(scaled_exit_btn, exit_rect.topleft)
+
+            # continue button
+            scaled_continue_btn = pygame.transform.smoothscale(self.continue_btn, (int(175 * scale), int(66 * scale)))
+            cont_rect = scaled_continue_btn.get_rect(center=(base_x + 110 * scale, base_y))
+            self.window.blit(scaled_continue_btn, cont_rect.topleft)
+
+            # exit and continue button texts
+            self.my_font.render(self.window, "EXIT", (base_x - 145 * scale, base_y - 10 * scale), scale=scale * 2)
+            self.my_font.render(self.window, "CONTINUE", (base_x + 45 * scale, base_y - 7), scale=scale * 1.5)
 
 tower_game = Game()
 tower_game.run()
