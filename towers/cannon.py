@@ -25,9 +25,10 @@ class Cannon(Tower):
         pygame.image.load(os.path.join(base_path, "assets", "ui", "toolbar_cannon_highlight.png")).convert_alpha(),
         (160, 112)
     )
+    price = 300
 
     def __init__(self, x, y):
         super().__init__(x, y)
         self.tower_imgs = Cannon.tower_imgs
         self.range = 200
-        self.price = 200
+        self.price = Cannon.price

@@ -24,9 +24,10 @@ class Crossbow(Tower):
         pygame.image.load(os.path.join(base_path, "assets", "ui", "toolbar_crossbow_highlight.png")).convert_alpha(),
         (160, 112)
     )
+    price = 150
 
     def __init__(self, x, y):
         super().__init__(x, y)
         self.tower_imgs = Crossbow.tower_imgs
         self.range = 150
-        self.price = 150
+        self.price = Crossbow.price
