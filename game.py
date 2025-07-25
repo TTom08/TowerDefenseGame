@@ -8,6 +8,7 @@ window = pygame.display.set_mode((1500, 960))
 
 from enemies.tabby import Tabby
 from enemies.black import Black
+from enemies.rolling import Rolling
 from towers.crossbow import Crossbow
 from towers.cannon import Cannon
 from font import Font
@@ -153,6 +154,7 @@ class Game:
                                 # Start the round
                                 self.enemies.append(Tabby())
                                 self.enemies.append(Black())
+                                self.enemies.append(Rolling())
                                 self.round += 1
                                 self.round_active = True
                             else:
