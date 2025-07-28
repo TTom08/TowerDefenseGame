@@ -8,6 +8,8 @@ Clips a surface to a specified rectangle and returns a copy of the clipped surfa
 :param x_size: The width of the clipping rectangle.
 :param y_size: The height of the clipping rectangle.
 """
+
+
 def clip(surf, x, y, x_size, y_size):
     handle_surf = surf.copy()
     clipR = pygame.Rect(x, y, x_size, y_size)
@@ -15,14 +17,17 @@ def clip(surf, x, y, x_size, y_size):
     image = surf.subsurface(handle_surf.get_clip())
     return image.copy()  # Return a copy of the clipped surface
 
+
 class Font:
     """
     A class representing a font renderer for displaying characters on a surface.
     :param path: The file path to the font image.
     """
+
     def __init__(self, path):
         self.spacing = 1
-        self.character_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'R', 'O', 'U', 'N', 'D', 'E', 'X', 'I', 'T', 'C']
+        self.character_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'R', 'O', 'U', 'N', 'D', 'E', 'X',
+                                'I', 'T', 'C', 'G', 'H', 'M', 'Y', '!', 'L', 'V', 'A', 'B', ' ']
         font_img = pygame.image.load(path).convert_alpha()
         current_char_width = 0
         self.characters = {}
@@ -37,7 +42,12 @@ class Font:
             else:
                 current_char_width += 1
 
-    def render(self, surf, text, loc, scale=1):
+        space_width = self.characters['0'].get_width() // 2
+        space_height = list(self.characters.values())[0].get_height()
+        self.characters[' '] = pygame.Surface((space_width, space_height), pygame.SRCALPHA)
+        self.characters[' '].fill((0, 0, 0, 0))
+
+    def render(self, surf, text, loc, scale=1, alpha=255):
         """
         Renders the specified text on the given surface at the specified location with an optional scale.
         :param surf: The surface to render the text on.
@@ -55,5 +65,6 @@ class Font:
                         char_img,
                         (int(char_img.get_width() * scale), int(char_img.get_height() * scale))
                     )
+                char_img.set_alpha(alpha)
                 surf.blit(char_img, (loc[0] + x_offset, loc[1]))
                 x_offset += char_img.get_width() + int(self.spacing * scale)

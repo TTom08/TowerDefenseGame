@@ -119,6 +119,7 @@ class Game:
         self.continue_btn_rect = self.continue_btn.get_rect(topleft=(self.game_width // 2 + 20, self.height // 2 - 33))
 
         self.my_font = Font("assets/ui/font.png")
+        self.messages = []
 
         for t in self.available_towers:
             t['rect'] = pygame.Rect(t['pos'][0], t['pos'][1], 160, 112)
@@ -163,16 +164,18 @@ class Game:
                     else:
                         # Place tower on map if the area is buildable
                         if self.selected_tool and mouse_pos[0] < self.game_width:
-                            if (self.money - self.selected_tool.price if self.selected_tool else 0) >= 0:
-                                if self.is_buildable(mouse_pos[0], mouse_pos[1]) and not self.is_overlapping(
-                                        mouse_pos[0], mouse_pos[1]):
+                            if self.is_buildable(mouse_pos[0], mouse_pos[1]) and not self.is_overlapping(mouse_pos[0],
+                                                                                                         mouse_pos[1]):
+                                if (self.money - self.selected_tool.price if self.selected_tool else 0) >= 0:
                                     self.towers.append(self.selected_tool(mouse_pos[0], mouse_pos[1]))
                                     self.money -= self.selected_tool.price
                                     self.selected_tool = None
                                 else:
-                                    print("Invalid build location!")
+                                    self.show_message("NOT ENOUGH MONEY!", (mouse_pos[0] + 15, mouse_pos[1] - 3),
+                                                      duration=20)
                             else:
-                                print("Not enough money to place this tower!")
+                                self.show_message("INVALID BUILD LOCATION!", (mouse_pos[0] + 15, mouse_pos[1] - 3),
+                                                  duration=20)
 
                     if self.exit_menu_scale > 0.95:
                         if self.exit_btn_rect.collidepoint(mouse_pos):
@@ -285,6 +288,17 @@ class Game:
 
         self.draw_exit_menu()
 
+        for msg in self.messages[:]:
+            if msg['duration'] > 0:
+                self.my_font.render(self.window, msg['text'], msg['pos'], scale=2, alpha=msg['alpha'])
+                msg['duration'] -= 1
+            else:
+                msg['alpha'] -= msg['fade_speed']
+                if msg['alpha'] <= 0:
+                    self.messages.remove(msg)
+                    continue
+                self.my_font.render(self.window, msg['text'], msg['pos'], scale=2, alpha=msg['alpha'])
+
         pygame.display.update()
 
     def draw_exit_menu(self):
@@ -317,7 +331,23 @@ class Game:
 
             # exit and continue button texts
             self.my_font.render(self.window, "EXIT", (base_x - 145 * scale, base_y - 10 * scale), scale=scale * 2)
-            self.my_font.render(self.window, "CONTINUE", (base_x + 45 * scale, base_y - 7), scale=scale * 1.5)
+            self.my_font.render(self.window, "CONTINUE", (base_x + 50 * scale, base_y - 10), scale=scale * 1.5)
+
+    def show_message(self, text, pos, duration=60, fade_speed=8):
+        """
+        Displays a message on the screen for a specified duration.
+        :param text: The message to display.
+        :param pos: (x, y) position on screen.
+        :param duration: How long to show the message (in frames).
+        """
+        self.messages.append({
+            'text': text,
+            'pos': pos,
+            'alpha': 255,
+            'duration': duration,
+            'fade_speed': fade_speed
+        })
+
 
 tower_game = Game()
 tower_game.run()
