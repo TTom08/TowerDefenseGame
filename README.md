@@ -6,6 +6,7 @@ Place down towers that definitely **DO NOT KILL ANY CATS**, and defend your base
 ## Features
 - **Basic Graphics**: Simple yet charming graphics that fit the theme.
 - - **Silly Cat Theme**: Enjoy a light-hearted, cat-themed game with cute graphics.
+- - **Custom Font**: A custom font is used for the UI to enhance the visual appeal.
 - **Lightweight**: The game is lightweight and can run on low-end machines.
 - **Simple Mechanics**: Easy to understand and play, suitable for all ages.
 - - **Tower Placement**: Place towers on the map to defend against incoming enemies.
@@ -44,3 +45,4 @@ Place down towers that definitely **DO NOT KILL ANY CATS**, and defend your base
 ```
 
 ## Thanks for Playing! :)
+![buh](assets/other/buh.jpg)
