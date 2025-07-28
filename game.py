@@ -1,5 +1,6 @@
 import os.path
 import pygame
+import random
 
 pygame.init()
 pygame.mixer.quit()
@@ -38,6 +39,9 @@ class Game:
         self.round_active = False
 
         self.enemies = []
+        self.upcoming_enemies = []
+        self.spawn_delay = 1000
+        self.last_spawn_time = 0
 
         self.available_towers = [
             {
@@ -126,6 +130,12 @@ class Game:
 
         self.start_button_rect = self.start_button.get_rect(topleft=(1292, 784))
 
+        self.enemy_types = [
+            {'class': Tabby, 'min-wave': 1},
+            {'class': Black, 'min-wave': 3},
+            {'class': Rolling, 'min-wave': 5}
+        ]
+
     def run(self):
         """
         Initializes the game and sets up the necessary variables and assets.
@@ -153,10 +163,9 @@ class Game:
                         else:
                             if not self.round_active:
                                 # Start the round
-                                self.enemies.append(Tabby())
-                                self.enemies.append(Black())
-                                self.enemies.append(Rolling())
                                 self.round += 1
+                                self.upcoming_enemies = self.generate_wave(self.round)
+                                self.last_spawn_time = pygame.time.get_ticks()
                                 self.round_active = True
                             else:
                                 # Pause the round
@@ -199,6 +208,18 @@ class Game:
             for d in to_delete:
                 self.enemies.remove(d)
 
+            # Adding delay between enemy spawns
+            if self.round_active and self.upcoming_enemies:
+                current_time = pygame.time.get_ticks()
+                if current_time - self.last_spawn_time >= self.spawn_delay:
+                    enemy = self.upcoming_enemies.pop(0)
+                    self.enemies.append(enemy)
+                    self.last_spawn_time = current_time
+
+            # If there are no more enemies to spawn, end the round
+            if self.round_active and not self.upcoming_enemies and not self.enemies:
+                self.round_active = False
+
             self.draw()
 
         pygame.quit()
@@ -224,6 +245,20 @@ class Game:
             if tower.click(x, y):
                 return True
         return False
+
+    def generate_wave(self, wave_num):
+        wave_enemies = []
+        num_enemies = 5 + wave_num * 2
+
+        available_enemies = [e['class'] for e in self.enemy_types if wave_num >= e['min-wave']]
+        if not available_enemies:
+            available_enemies = [self.enemy_types[0]['class']]
+
+        for _ in range(num_enemies):
+            enemy_class = random.choice(available_enemies)
+            wave_enemies.append(enemy_class())
+
+        return wave_enemies
 
     def draw(self):
         """
@@ -347,6 +382,24 @@ class Game:
             'duration': duration,
             'fade_speed': fade_speed
         })
+
+"""
+class MainMenu:
+    def __init__(self):
+        pass
+
+    running = True
+    clock = pygame.time.Clock()
+
+    while running:
+        mouse_pos = pygame.mouse.get_pos()
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+"""
+
+
 
 
 tower_game = Game()
