@@ -43,6 +43,11 @@ class Game:
         self.spawn_delay = 1000
         self.last_spawn_time = 0
 
+        self.round_start_delay = 2000
+        self.round_start_time = 0
+        self.auto_start = False
+        self.waiting_for_start = False
+
         self.available_towers = [
             {
                 'class': Crossbow,
@@ -161,15 +166,20 @@ class Game:
                         if self.selected_tool:
                             print("Please place a tower before starting the game!")
                         else:
-                            if not self.round_active:
-                                # Start the round
-                                self.round += 1
-                                self.upcoming_enemies = self.generate_wave(self.round)
-                                self.last_spawn_time = pygame.time.get_ticks()
-                                self.round_active = True
-                            else:
-                                # Pause the round
-                                self.round_active = False
+                            if not self.round_active and not self.waiting_for_start:
+                                if self.auto_start:
+                                    # Auto start enabled
+                                    self.waiting_for_start = True
+                                    self.round_start_time = pygame.time.get_ticks()
+                                else:
+                                    # Manual start
+                                    self.round += 1
+                                    self.upcoming_enemies = self.generate_wave(self.round)
+                                    self.last_spawn_time = pygame.time.get_ticks()
+                                    self.round_active = True
+
+                            # Switching between auto start mode
+                            self.auto_start = not self.auto_start
                     else:
                         # Place tower on map if the area is buildable
                         if self.selected_tool and mouse_pos[0] < self.game_width:
@@ -208,6 +218,15 @@ class Game:
             for d in to_delete:
                 self.enemies.remove(d)
 
+            # If auto start is enabled, automatically start the next round delayed
+            if self.waiting_for_start:
+                if pygame.time.get_ticks() - self.round_start_time >= self.round_start_delay:
+                    self.round += 1
+                    self.upcoming_enemies = self.generate_wave(self.round)
+                    self.last_spawn_time = pygame.time.get_ticks()
+                    self.round_active = True
+                    self.waiting_for_start = False
+
             # Adding delay between enemy spawns
             if self.round_active and self.upcoming_enemies:
                 current_time = pygame.time.get_ticks()
@@ -216,9 +235,12 @@ class Game:
                     self.enemies.append(enemy)
                     self.last_spawn_time = current_time
 
-            # If there are no more enemies to spawn, end the round
+            # If the round is over (no more enemies), end it and prepare next if auto_start is ON
             if self.round_active and not self.upcoming_enemies and not self.enemies:
                 self.round_active = False
+                if self.auto_start:
+                    self.waiting_for_start = True
+                    self.round_start_time = pygame.time.get_ticks()
 
             self.draw()
 
@@ -307,7 +329,7 @@ class Game:
         #    pygame.draw.circle(self.window, (255, 0, 0), point, 5)
 
         # Display start and pause buttons
-        button_img = self.pause_button if self.round_active else self.start_button
+        button_img = self.pause_button if self.auto_start else self.start_button
         self.window.blit(button_img, (1292, 784))
 
         # Display lives and money on statbar
@@ -383,6 +405,7 @@ class Game:
             'fade_speed': fade_speed
         })
 
+
 """
 class MainMenu:
     def __init__(self):
@@ -398,9 +421,6 @@ class MainMenu:
             if event.type == pygame.QUIT:
                 running = False
 """
-
-
-
 
 tower_game = Game()
 tower_game.run()
