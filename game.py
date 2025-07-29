@@ -14,7 +14,6 @@ from towers.crossbow import Crossbow
 from towers.cannon import Cannon
 from font import Font
 
-
 ###
 # This is a simple tower defense game where you can place towers to defend against waves of enemies.
 ###
@@ -23,13 +22,11 @@ class Game:
     """
     This is the main game class that handles the game loop, events, and rendering.
     """
-
-    def __init__(self):
+    def __init__(self, window):
+        self.window = window
         self.game_width = 1280
         self.toolbar_width = 220
-        self.width = self.game_width + self.toolbar_width
-        self.height = 960
-        self.window = pygame.display.set_mode((self.width, self.height))
+        self.width, self.height = window.get_size()
 
         self.lives = 10
         self.money = 200
@@ -40,7 +37,7 @@ class Game:
 
         self.enemies = []
         self.upcoming_enemies = []
-        self.spawn_delay = 1000
+        self.spawn_delay = 2000
         self.last_spawn_time = 0
 
         self.round_start_delay = 2000
@@ -154,7 +151,7 @@ class Game:
             clock.tick(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    return "quit"
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for t in self.available_towers:
@@ -198,7 +195,7 @@ class Game:
 
                     if self.exit_menu_scale > 0.95:
                         if self.exit_btn_rect.collidepoint(mouse_pos):
-                            running = False
+                            return "menu"
                         elif self.continue_btn_rect.collidepoint(mouse_pos):
                             self.exit_menu_active = False
                             self.exit_menu_target_scale = 0.0
@@ -404,23 +401,3 @@ class Game:
             'duration': duration,
             'fade_speed': fade_speed
         })
-
-
-"""
-class MainMenu:
-    def __init__(self):
-        pass
-
-    running = True
-    clock = pygame.time.Clock()
-
-    while running:
-        mouse_pos = pygame.mouse.get_pos()
-        clock.tick(60)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-"""
-
-tower_game = Game()
-tower_game.run()
