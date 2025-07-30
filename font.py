@@ -27,7 +27,7 @@ class Font:
     def __init__(self, path):
         self.spacing = 1
         self.character_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'R', 'O', 'U', 'N', 'D', 'E', 'X',
-                                'I', 'T', 'C', 'G', 'H', 'M', 'Y', '!', 'L', 'V', 'A', 'B', ' ']
+                                'I', 'T', 'C', 'G', 'H', 'M', 'Y', '!', 'L', 'V', 'A', 'B', 'S', 'P', ' ']
         font_img = pygame.image.load(path).convert_alpha()
         current_char_width = 0
         self.characters = {}

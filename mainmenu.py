@@ -13,9 +13,9 @@ class MainMenu:
         self.menu_background = assets['menu_background']
 
         self.menu_ui_bg = assets['menu_ui_bg']
-        self.exit_btn = assets['exit_btn']
+        self.exit_btn = assets['menu_exit_btn']
         self.exit_btn_rect = self.exit_btn.get_rect(topleft=(500, 580))
-        self.exit_btn_hover = assets['exit_btn_hover']
+        self.exit_btn_hover = assets['menu_exit_btn_hover']
         self.play_btn = assets['play_btn']
         self.play_btn_rect = self.play_btn.get_rect(topleft=(500, 450))
         self.play_btn_hover = assets['play_btn_hover']

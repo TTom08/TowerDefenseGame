@@ -45,6 +45,7 @@ class Game:
         self.round_start_time = 0
         self.auto_start = False
         self.waiting_for_start = False
+        self.game_over = False
 
         self.available_towers = [
             {
@@ -179,6 +180,14 @@ class Game:
                         self.exit_menu_active = not self.exit_menu_active
                         self.exit_menu_target_scale = 1.0 if self.exit_menu_active else 0.0
 
+                # Restart the game if game over
+                if self.game_over and event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    return "restart"
+                # Exit to main menu if game over
+                elif self.game_over and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    self.fade_out(self.window)
+                    return "menu"
+
             # Iterate through enemies - to list
             to_delete = []
             for e in self.enemies:
@@ -187,7 +196,16 @@ class Game:
             # Delete enemy once its off screen
             for d in to_delete:
                 self.enemies.remove(d)
-
+                if not self.game_over:
+                    if isinstance(d, Tabby):
+                        self.lives -= 1
+                    elif isinstance(d, Black):
+                        self.lives -= 2
+                    elif isinstance(d, Rolling):
+                        self.lives -= 3
+            if self.lives <= 0 and not self.game_over:
+                self.game_over = True
+                self.auto_start = False
 
             # If auto start is enabled, automatically start the next round delayed
             if self.waiting_for_start:
@@ -328,6 +346,15 @@ class Game:
                     continue
                 self.my_font.render(self.window, msg['text'], msg['pos'], scale=2, alpha=msg['alpha'])
 
+        if self.game_over:
+            overlay = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            overlay.fill((50, 50, 50, 180))
+            self.window.blit(overlay, (0, 0))
+
+            self.my_font.render(self.window, "GAME OVER", (self.game_width // 2 - 150, self.height // 2 - 50), scale=4)
+            self.my_font.render(self.window, "PRESS R TO RESTART", (self.game_width // 2 - 140, self.height // 2 + 20), scale=2)
+            self.my_font.render(self.window, "PRESS ESC TO EXIT TO MAIN MENU", (self.game_width // 2 - 110, self.height // 2 + 200), scale=1)
+
     def draw_exit_menu(self):
         # Display exit menu with transition
         scale_speed = 0.3
@@ -336,7 +363,7 @@ class Game:
         elif self.exit_menu_scale > self.exit_menu_target_scale:
             self.exit_menu_scale -= (self.exit_menu_scale - self.exit_menu_target_scale) * scale_speed
 
-        if self.exit_menu_scale > 0:
+        if self.exit_menu_scale > 0 and not self.game_over:
             scale = self.exit_menu_scale
             base_x = self.game_width // 2
             base_y = self.height // 2

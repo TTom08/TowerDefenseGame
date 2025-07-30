@@ -70,11 +70,11 @@ def load_assets():
         pygame.image.load(os.path.join("assets", "ui", "mainmenu", "mainmenu_ui_bg.png")).convert_alpha(),
         (1500, 480)
     )
-    assets['exit_btn'] = pygame.transform.scale(
+    assets['menu_exit_btn'] = pygame.transform.scale(
         pygame.image.load(os.path.join("assets", "ui", "mainmenu", "exitgame_btn.png")).convert_alpha(),
         (420, 90)
     )
-    assets['exit_btn_hover'] = pygame.transform.scale(
+    assets['menu_exit_btn_hover'] = pygame.transform.scale(
         pygame.image.load(os.path.join("assets", "ui", "mainmenu", "exitgame_btn_hover.png")).convert_alpha(),
         (420, 90)
     )
@@ -105,14 +105,20 @@ def main():
         if menu_result == "quit":
             break
 
-        game = Game(window, assets)
-        game.fade_in(window)
-        game_result = game.run()
+        while True:
+            game = Game(window, assets)
+            game.fade_in(window)
+            game_result = game.run()
+
+            if game_result == "quit":
+                break
+            elif game_result == "restart":
+                continue
+            else:
+                break
 
         if game_result == "quit":
             break
-
-        del game
 
 
 if __name__ == "__main__":
