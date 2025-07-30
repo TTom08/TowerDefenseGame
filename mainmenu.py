@@ -52,11 +52,14 @@ class MainMenu:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.play_btn_rect.collidepoint(mouse_pos):
+                        self.fade_out(self.window)
                         return "game"
                     elif self.exit_btn_rect.collidepoint(mouse_pos):
+                        self.fade_out(self.window)
                         return "quit"
 
             self.draw()
+            pygame.display.flip()
 
     def draw(self):
         self.window.blit(self.background, (0, 0))
@@ -73,4 +76,31 @@ class MainMenu:
         else:
             self.window.blit(self.play_btn, (500, 450))
 
-        pygame.display.flip()
+
+    def fade_out(self, window, speed=10):
+        fade = pygame.Surface(window.get_size()).convert_alpha()
+        fade.fill((0, 0, 0, 0))
+        clock = pygame.time.Clock()
+
+        alpha = 0
+        while alpha < 255:
+            self.draw()
+            alpha = min(255, alpha + speed)
+            fade.fill((0, 0, 0, alpha))
+            window.blit(fade, (0, 0))
+            pygame.display.flip()
+            clock.tick(60)
+
+    def fade_in(self, window, speed=5):
+        fade = pygame.Surface(window.get_size()).convert_alpha()
+        fade.fill((0, 0, 0, 255))
+        clock = pygame.time.Clock()
+
+        alpha = 255
+        while alpha > 0:
+            self.draw()
+            alpha = max(0, alpha - speed)
+            fade.fill((0, 0, 0, alpha))
+            window.blit(fade, (0, 0))
+            pygame.display.flip()
+            clock.tick(60)

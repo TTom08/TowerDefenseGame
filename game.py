@@ -146,6 +146,9 @@ class Game:
         running = True
         clock = pygame.time.Clock()
 
+        self.draw()
+        pygame.display.flip()
+
         while running:
             mouse_pos = pygame.mouse.get_pos()
             clock.tick(60)
@@ -195,6 +198,7 @@ class Game:
 
                     if self.exit_menu_scale > 0.95:
                         if self.exit_btn_rect.collidepoint(mouse_pos):
+                            self.fade_out(window)
                             return "menu"
                         elif self.continue_btn_rect.collidepoint(mouse_pos):
                             self.exit_menu_active = False
@@ -240,8 +244,9 @@ class Game:
                     self.round_start_time = pygame.time.get_ticks()
 
             self.draw()
+            pygame.display.flip()
 
-        pygame.quit()
+        return "menu"
 
     def is_buildable(self, x, y):
         """
@@ -353,8 +358,6 @@ class Game:
                     continue
                 self.my_font.render(self.window, msg['text'], msg['pos'], scale=2, alpha=msg['alpha'])
 
-        pygame.display.update()
-
     def draw_exit_menu(self):
         # Display exit menu with transition
         scale_speed = 0.3
@@ -401,3 +404,31 @@ class Game:
             'duration': duration,
             'fade_speed': fade_speed
         })
+
+    def fade_out(self, window, speed=10):
+        fade = pygame.Surface(window.get_size()).convert_alpha()
+        fade.fill((0, 0, 0, 0))
+        clock = pygame.time.Clock()
+
+        alpha = 0
+        while alpha < 255:
+            self.draw()
+            alpha = min(255, alpha + speed)
+            fade.fill((0, 0, 0, alpha))
+            window.blit(fade, (0, 0))
+            pygame.display.flip()
+            clock.tick(60)
+
+    def fade_in(self, window, speed=5):
+        fade = pygame.Surface(window.get_size()).convert_alpha()
+        fade.fill((0, 0, 0, 255))
+        clock = pygame.time.Clock()
+
+        alpha = 255
+        while alpha > 0:
+            self.draw()
+            alpha = max(0, alpha - speed)
+            fade.fill((0, 0, 0, alpha))
+            window.blit(fade, (0, 0))
+            pygame.display.flip()
+            clock.tick(60)
