@@ -10,7 +10,7 @@ class Crossbow(Tower):
     Crossbow tower class that represents a crossbow tower in the game.
     It inherits from the Tower class and sets specific properties for the crossbow tower.
     """
-    tower_imgs = [
+    crossbow_imgs = [
         pygame.transform.scale(
             pygame.image.load(os.path.join(base_path, "assets", "towers", "crossbow1.png")).convert_alpha(),
             (160, 160)
@@ -28,6 +28,6 @@ class Crossbow(Tower):
 
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs = Crossbow.tower_imgs
+        self.crossbow_imgs = Crossbow.crossbow_imgs
         self.range = 150
         self.price = Crossbow.price

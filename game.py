@@ -12,7 +12,7 @@ from enemies.black import Black
 from enemies.rolling import Rolling
 from towers.crossbow import Crossbow
 from towers.cannon import Cannon
-from font import Font
+
 
 ###
 # This is a simple tower defense game where you can place towers to defend against waves of enemies.
@@ -22,13 +22,14 @@ class Game:
     """
     This is the main game class that handles the game loop, events, and rendering.
     """
-    def __init__(self, window):
+
+    def __init__(self, window, assets):
         self.window = window
         self.game_width = 1280
         self.toolbar_width = 220
         self.width, self.height = window.get_size()
 
-        self.lives = 10
+        self.lives = 1
         self.money = 200
         self.round = 0
         self.selected_tool = None
@@ -61,70 +62,38 @@ class Game:
         ]
 
         # Game background
-        self.background = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "other", "map.png")).convert(),
-            (self.game_width, self.height)
-        )
+        self.game_background = assets['game_background']
 
         # Toolbar background
         self.toolbar_bg = pygame.Surface((self.toolbar_width, self.height))
-        self.toolbar_bg = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "toolbar.png")).convert(),
-            (self.toolbar_width, self.height)
-        )
+        self.toolbar_bg = assets['toolbar_bg']
 
         # Start button
-        self.start_button = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "start_btn.png")).convert_alpha(),
-            (198, 165)
-        )
+        self.start_button = assets['start_button']
         # Pause button
-        self.pause_button = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "pause_btn.png")).convert_alpha(),
-            (198, 165)
-        )
+        self.pause_button = assets['pause_button']
 
         # Placement mask
-        self.placement_mask = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "other", "placement_mask.png")).convert(),
-            (self.game_width, self.height)
-        )
+        self.placement_mask = assets['placement_mask']
+        # PixelArray for the placement mask to check buildable areas
         self.mask_pixels = pygame.PixelArray(self.placement_mask)
 
         # Statbar - lives and money
-        self.statbar_bg = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "statbar.png")).convert_alpha(),
-            (900, 102)
-        )
-        self.statbar_heart = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "heart.png")).convert_alpha(),
-            (50, 47.5)
-        )
-        self.statbar_coin = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "coin.png")).convert_alpha(),
-            (26 + (13 * 0.35), 38 + (19 * 0.35))
-        )
+        self.statbar_bg = assets['statbar_bg']
+        self.statbar_heart = assets['statbar_heart']
+        self.statbar_coin = assets['statbar_coin']
 
         # Exit menu and its buttons
         self.exit_menu_active = False
         self.exit_menu_scale = 0.0
         self.exit_menu_target_scale = 0.0
-        self.exit_menu_bg = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "exit_menu.png")).convert_alpha(),
-            (500, 150)
-        )
-        self.exit_btn = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "exit_btn.png")).convert_alpha(),
-            (180, 72)
-        )
+        self.exit_menu_bg = assets['exit_menu_bg']
+        self.exit_btn = assets['exit_btn']
         self.exit_btn_rect = self.exit_btn.get_rect(topleft=(self.game_width // 2 - 195, self.height // 2 - 33))
-        self.continue_btn = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "continue_btn.png")).convert_alpha(),
-            (180, 72)
-        )
+        self.continue_btn = assets['continue_btn']
         self.continue_btn_rect = self.continue_btn.get_rect(topleft=(self.game_width // 2 + 20, self.height // 2 - 33))
 
-        self.my_font = Font("assets/ui/font.png")
+        self.my_font = assets['my_font']
         self.messages = []
 
         for t in self.available_towers:
@@ -219,6 +188,7 @@ class Game:
             for d in to_delete:
                 self.enemies.remove(d)
 
+
             # If auto start is enabled, automatically start the next round delayed
             if self.waiting_for_start:
                 if pygame.time.get_ticks() - self.round_start_time >= self.round_start_delay:
@@ -288,7 +258,7 @@ class Game:
         """
         Displays the game window and draws all the game elements such as towers, enemies, and UI.
         """
-        self.window.blit(self.background, (0, 0))
+        self.window.blit(self.game_background, (0, 0))
 
         self.window.blit(self.toolbar_bg, (self.game_width, 0))
 

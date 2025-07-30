@@ -4,39 +4,21 @@ import pygame
 pygame.init()
 pygame.mixer.quit()
 
+
 class MainMenu:
-    def __init__(self, window):
+    def __init__(self, window, assets):
         self.window = window
         self.width, self.height = window.get_size()
 
-        self.background = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "mainmenu", "bg.png")).convert(),
-            (self.width, self.height)
-        )
+        self.menu_background = assets['menu_background']
 
-        self.menu_bg = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "mainmenu", "mainmenu_ui_bg.png")).convert_alpha(),
-            (self.width, 480)
-        )
-
-        self.exit_btn = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "mainmenu", "exitgame_btn.png")).convert_alpha(),
-            (420, 90)
-        )
+        self.menu_ui_bg = assets['menu_ui_bg']
+        self.exit_btn = assets['exit_btn']
         self.exit_btn_rect = self.exit_btn.get_rect(topleft=(500, 580))
-        self.exit_btn_hover = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "mainmenu", "exitgame_btn_hover.png")).convert_alpha(),
-            (420, 90)
-        )
-        self.play_btn = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "mainmenu", "play_btn.png")).convert_alpha(),
-            (420, 90)
-        )
+        self.exit_btn_hover = assets['exit_btn_hover']
+        self.play_btn = assets['play_btn']
         self.play_btn_rect = self.play_btn.get_rect(topleft=(500, 450))
-        self.play_btn_hover = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "ui", "mainmenu", "play_btn_hover.png")).convert_alpha(),
-            (420, 90)
-        )
+        self.play_btn_hover = assets['play_btn_hover']
 
     def run(self):
         running = True
@@ -62,8 +44,8 @@ class MainMenu:
             pygame.display.flip()
 
     def draw(self):
-        self.window.blit(self.background, (0, 0))
-        self.window.blit(self.menu_bg, (0, self.height // 2 - 240))
+        self.window.blit(self.menu_background, (0, 0))
+        self.window.blit(self.menu_ui_bg, (0, self.height // 2 - 240))
 
         mouse_pos = pygame.mouse.get_pos()
         if self.exit_btn_rect.collidepoint(mouse_pos):
@@ -75,7 +57,6 @@ class MainMenu:
             self.window.blit(self.play_btn_hover, (500, 450))
         else:
             self.window.blit(self.play_btn, (500, 450))
-
 
     def fade_out(self, window, speed=10):
         fade = pygame.Surface(window.get_size()).convert_alpha()

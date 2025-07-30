@@ -11,7 +11,7 @@ class Cannon(Tower):
     It inherits from the Tower class and sets specific properties for the cannon tower.
     """
 
-    tower_imgs = [
+    cannon_imgs = [
         pygame.transform.scale(
             pygame.image.load(os.path.join(base_path, "assets", "towers", "cannon.png")).convert_alpha(),
             (150, 150)
@@ -29,6 +29,6 @@ class Cannon(Tower):
 
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs = Cannon.tower_imgs
+        self.cannon_imgs = Cannon.cannon_imgs
         self.range = 200
         self.price = Cannon.price

@@ -19,7 +19,7 @@ class Tower:
             pygame.image.load(os.path.join("assets", "towers", "range_circle_64.png")).convert_alpha(),
             (self.range, self.range)
         )
-        self.tower_range_circle.set_alpha(144) # semi-transparent tower range circle
+        self.tower_range_circle.set_alpha(144)
 
     def draw(self, window):
         """
