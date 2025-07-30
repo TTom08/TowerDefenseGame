@@ -63,7 +63,7 @@ def load_assets():
 
     # mainmenu.py assets
     assets['menu_background'] = pygame.transform.scale(
-        pygame.image.load(os.path.join("assets", "ui", "mainmenu", "bg.png")).convert(),
+        pygame.image.load(os.path.join("assets", "ui", "mainmenu", "bg2.png")).convert(),
         (1500, 960)
     )
     assets['menu_ui_bg'] = pygame.transform.scale(

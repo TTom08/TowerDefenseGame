@@ -19,6 +19,7 @@ class MainMenu:
         self.play_btn = assets['play_btn']
         self.play_btn_rect = self.play_btn.get_rect(topleft=(500, 450))
         self.play_btn_hover = assets['play_btn_hover']
+        self.my_font = assets['my_font']
 
     def run(self):
         running = True
@@ -57,6 +58,8 @@ class MainMenu:
             self.window.blit(self.play_btn_hover, (500, 450))
         else:
             self.window.blit(self.play_btn, (500, 450))
+
+        self.my_font.render(self.window, "SILLY CAT GAME", (100, 158), scale=6)
 
     def fade_out(self, window, speed=10):
         fade = pygame.Surface(window.get_size()).convert_alpha()

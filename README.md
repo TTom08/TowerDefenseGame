@@ -14,7 +14,9 @@ Place down towers that definitely **DO NOT KILL ANY CATS**, and defend your base
 
 ## Screenshots
 
-![Preview image of the game](assets/other/preview.png)
+![Screenshot of the game](assets/other/preview.png)
+
+![Screenshot of the game's main menu](assets/other/preview2.png)
 
 ## How to Play
 - Click a tower in the toolbar to select it.
@@ -41,7 +43,9 @@ Place down towers that definitely **DO NOT KILL ANY CATS**, and defend your base
 │   ├── crossbow.py
 │   └── cannon.py
 ├── font.py
-└── game.py
+├── mainmenu.py
+├── game.py
+└── main.py
 ```
 
 ## Thanks for Playing! :)
