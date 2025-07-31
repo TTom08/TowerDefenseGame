@@ -1,12 +1,14 @@
 import pygame
 import os.path
 
+
 class Tower:
     """
     Tower class that represents a tower in the game. It handles drawing the tower, its range, and detecting clicks on it.
     It also manages the tower's level and price.
     """
-    def __init__(self,x,y):
+
+    def __init__(self, x, y):
         self.x = x
         self.y = y
         self.price = 0

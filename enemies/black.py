@@ -4,6 +4,7 @@ from enemies.enemy import Enemy
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
 class Black(Enemy):
     """
     Black enemy class that represents an armored black cat enemy in the game.
@@ -20,3 +21,4 @@ class Black(Enemy):
         super().__init__(animation_speed=15, movement_speed=2)
         self.imgs = Black.imgs
         self.y_offset = -45
+        self.health = 3

@@ -4,6 +4,7 @@ from enemies.enemy import Enemy
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
 class Tabby(Enemy):
     """
     Tabby enemy class that represents a tabby cat enemy in the game.

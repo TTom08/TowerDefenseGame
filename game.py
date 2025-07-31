@@ -1,5 +1,4 @@
 import math
-import os.path
 import pygame
 import random
 
@@ -33,7 +32,7 @@ class Game:
 
         self.lives = 10
         self.money = 200
-        self.round = 9
+        self.round = 0
         self.selected_tool = None
         self.towers = []
         self.round_active = False
@@ -368,8 +367,10 @@ class Game:
             self.window.blit(overlay, (0, 0))
 
             self.my_font.render(self.window, "GAME OVER", (self.game_width // 2 - 150, self.height // 2 - 50), scale=4)
-            self.my_font.render(self.window, "PRESS R TO RESTART", (self.game_width // 2 - 140, self.height // 2 + 20), scale=2)
-            self.my_font.render(self.window, "PRESS ESC TO EXIT TO MAIN MENU", (self.game_width // 2 - 110, self.height // 2 + 200), scale=1)
+            self.my_font.render(self.window, "PRESS R TO RESTART", (self.game_width // 2 - 140, self.height // 2 + 20),
+                                scale=2)
+            self.my_font.render(self.window, "PRESS ESC TO EXIT TO MAIN MENU",
+                                (self.game_width // 2 - 110, self.height // 2 + 200), scale=1)
 
     def draw_exit_menu(self):
         # Display exit menu with transition

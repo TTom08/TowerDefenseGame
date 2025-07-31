@@ -5,6 +5,7 @@ from towers.tower import Tower
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
 class Crossbow(Tower):
     """
     Crossbow tower class that represents a crossbow tower in the game.

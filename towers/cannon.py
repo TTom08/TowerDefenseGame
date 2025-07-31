@@ -5,6 +5,7 @@ from towers.tower import Tower
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
 class Cannon(Tower):
     """
     Cannon tower class that represents a cannon tower in the game.
