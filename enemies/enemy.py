@@ -15,11 +15,11 @@ class Enemy:
         self.movement_speed = movement_speed
         self.animation_count = 0
         self.health = 1
-        self.path = [(1053, 16), (1056, 61), (1055, 116), (1066, 183), (1050, 254), (1007, 283), (893, 275), (798, 276),
+        self.path = [(1056, 16), (1055, 61), (1054, 116), (1053, 183), (1050, 254), (1007, 283), (893, 275), (798, 276),
                      (643, 271), (489, 277), (334, 275), (229, 282), (180, 280), (147, 307), (155, 350), (173, 400),
                      (181, 456), (193, 543), (203, 612), (213, 693), (220, 749), (263, 770), (347, 775), (429, 780),
                      (524, 783), (616, 792), (705, 795), (751, 777), (763, 712), (772, 617), (786, 555), (850, 538),
-                     (970, 541), (1050, 545), (1105, 551), (1111, 618), (1104, 695), (1114, 754), (1153, 775),
+                     (970, 541), (1050, 545), (1105, 551), (1111, 618), (1113, 695), (1114, 754), (1153, 775),
                      (1210, 786), (1257, 787)]
         self.x, self.y = self.path[0]
         self.width = 174
@@ -33,6 +33,10 @@ class Enemy:
         self.dis = 0
         self.y_offset = -45
 
+        self.flip_right = False
+        self.should_flip = False
+        self.should_rotate = False
+
     def draw(self, window):
         """
         Draws the enemy on the given window.
@@ -45,9 +49,30 @@ class Enemy:
         if self.animation_count >= len(self.imgs) * self.animation_speed:
             self.animation_count = 0
 
-        img_rect = self.img.get_rect()
+        transformed_img = self.img
+        if self.should_flip and self.flip_right:
+            transformed_img = pygame.transform.flip(self.img, True, False)
 
-        window.blit(self.img, (self.x - img_rect.width // 2, self.y - img_rect.height // 2 + self.y_offset))
+        if self.should_rotate:
+            x1, y1 = self.path[self.path_pos]
+            x2, y2 = self.path[self.path_pos + 1]
+
+            dx = x2 - x1
+            dy = y2 - y1
+
+            angle = math.degrees(math.atan2(-dy, dx))
+            # The image is facing down so 90 degrees rotate
+            angle += 90
+
+            transformed_img = pygame.transform.rotate(self.img, angle)
+
+            # Center the rotated image
+            rect = transformed_img.get_rect(center=(self.x, self.y + self.y_offset))
+            window.blit(transformed_img, rect.topleft)
+
+        img_rect = transformed_img.get_rect()
+        window.blit(transformed_img, (self.x - img_rect.width // 2, self.y - img_rect.height // 2 + self.y_offset))
+
         self.move()
 
     def collide(self, X, Y):
@@ -73,6 +98,13 @@ class Enemy:
 
         dir_x = x2 - x1
         dir_y = y2 - y1
+
+        # If the enemy should flip based on direction
+        if self.should_flip:
+            if dir_x > 0:
+                self.flip_right = True
+            elif dir_x < 0:
+                self.flip_right = False
 
         # Distance between path points
         distance = math.hypot(dir_x, dir_y)

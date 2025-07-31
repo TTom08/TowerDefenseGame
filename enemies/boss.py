@@ -22,3 +22,4 @@ class Boss(Enemy):
         self.imgs = Boss.imgs
         self.y_offset = 10
         self.health = 10
+        self.should_rotate = True

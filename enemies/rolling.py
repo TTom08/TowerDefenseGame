@@ -23,3 +23,4 @@ class Rolling(Enemy):
         self.imgs = Rolling.imgs
         self.y_offset = -45
         self.health = 3
+        self.should_flip = True

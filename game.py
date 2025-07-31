@@ -32,7 +32,7 @@ class Game:
 
         self.lives = 10
         self.money = 200
-        self.round = 0
+        self.round = 4
         self.selected_tool = None
         self.towers = []
         self.round_active = False
@@ -96,6 +96,7 @@ class Game:
         self.continue_btn = assets['continue_btn']
         self.continue_btn_rect = self.continue_btn.get_rect(topleft=(self.game_width // 2 + 20, self.height // 2 - 33))
 
+        # Custom font
         self.my_font = assets['my_font']
         self.messages = []
 
@@ -293,13 +294,13 @@ class Game:
         """
         self.window.blit(self.game_background, (0, 0))
 
-        self.window.blit(self.toolbar_bg, (self.game_width, 0))
-
         for tower in self.towers:
             tower.draw(self.window)
 
         for e in self.enemies:
             e.draw(self.window)
+
+        self.window.blit(self.toolbar_bg, (self.game_width, 0))
 
         for t in self.available_towers:
             self.window.blit(t['icon'], t['pos'])
