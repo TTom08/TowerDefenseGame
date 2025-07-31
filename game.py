@@ -1,3 +1,4 @@
+import math
 import os.path
 import pygame
 import random
@@ -10,6 +11,7 @@ window = pygame.display.set_mode((1500, 960))
 from enemies.tabby import Tabby
 from enemies.black import Black
 from enemies.rolling import Rolling
+from enemies.boss import Boss
 from towers.crossbow import Crossbow
 from towers.cannon import Cannon
 
@@ -29,9 +31,9 @@ class Game:
         self.toolbar_width = 220
         self.width, self.height = window.get_size()
 
-        self.lives = 1
+        self.lives = 10
         self.money = 200
-        self.round = 0
+        self.round = 9
         self.selected_tool = None
         self.towers = []
         self.round_active = False
@@ -46,6 +48,7 @@ class Game:
         self.auto_start = False
         self.waiting_for_start = False
         self.game_over = False
+        self.boss_round = False
 
         self.available_towers = [
             {
@@ -107,6 +110,7 @@ class Game:
             {'class': Black, 'min-wave': 3},
             {'class': Rolling, 'min-wave': 5}
         ]
+        self.enemy_type_boss = Boss
 
     def run(self):
         """
@@ -203,6 +207,12 @@ class Game:
                         self.lives -= 2
                     elif isinstance(d, Rolling):
                         self.lives -= 3
+                    elif isinstance(d, Boss):
+                        self.lives -= 5
+
+            if self.lives < 0:
+                self.lives = 0
+
             if self.lives <= 0 and not self.game_over:
                 self.game_over = True
                 self.auto_start = False
@@ -261,14 +271,20 @@ class Game:
     def generate_wave(self, wave_num):
         wave_enemies = []
         num_enemies = 5 + wave_num * 2
+        boss_num_enemies = 1 + math.floor(wave_num * 0.25)
 
-        available_enemies = [e['class'] for e in self.enemy_types if wave_num >= e['min-wave']]
-        if not available_enemies:
-            available_enemies = [self.enemy_types[0]['class']]
+        self.boss_round = (wave_num % 10 == 0)
 
-        for _ in range(num_enemies):
-            enemy_class = random.choice(available_enemies)
-            wave_enemies.append(enemy_class())
+        if self.boss_round:
+            for _ in range(boss_num_enemies):
+                wave_enemies.append(self.enemy_type_boss())
+        else:
+            available_enemies = [e['class'] for e in self.enemy_types if wave_num >= e['min-wave']]
+            if not available_enemies:
+                available_enemies = [self.enemy_types[0]['class']]
+            for _ in range(num_enemies):
+                enemy_class = random.choice(available_enemies)
+                wave_enemies.append(enemy_class())
 
         return wave_enemies
 

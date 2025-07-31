@@ -19,3 +19,4 @@ class Rolling(Enemy):
     def __init__(self):
         super().__init__(animation_speed=5, movement_speed=5)
         self.imgs = Rolling.imgs
+        self.y_offset = -45

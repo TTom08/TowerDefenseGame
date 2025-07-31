@@ -19,3 +19,4 @@ class Black(Enemy):
     def __init__(self):
         super().__init__(animation_speed=15, movement_speed=2)
         self.imgs = Black.imgs
+        self.y_offset = -45

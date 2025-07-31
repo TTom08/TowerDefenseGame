@@ -25,6 +25,7 @@ class Enemy:
         self.move_count = 0
         self.move_distance = 0
         self.dis = 0
+        self.y_offset = -45
 
     def draw(self, window):
         """
@@ -39,8 +40,8 @@ class Enemy:
             self.animation_count = 0
 
         img_rect = self.img.get_rect()
-        # Centering image
-        window.blit(self.img, (self.x - img_rect.width // 2, self.y - img_rect.height // 2 - 45))
+
+        window.blit(self.img, (self.x - img_rect.width // 2, self.y - img_rect.height // 2 + self.y_offset))
         self.move()
 
     def collide(self, X, Y):
