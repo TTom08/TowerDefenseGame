@@ -1,5 +1,6 @@
 import os.path
 import pygame
+
 from enemies.enemy import Enemy
 
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,6 +18,6 @@ class Tabby(Enemy):
         ) for i in range(2)
     ]
 
-    def __init__(self):
-        super().__init__(animation_speed=10, movement_speed=3)
+    def __init__(self, assets):
+        super().__init__(assets, animation_speed=10, movement_speed=3)
         self.imgs = Tabby.imgs

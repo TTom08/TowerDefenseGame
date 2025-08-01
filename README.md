@@ -1,4 +1,4 @@
-# 2D Tower Defense Game
+# SILLY CAT GAME
 
 Basic silly cat themed tower defense strategy game built using **Python, PyGame library**.
 Place down towers that definitely **DO NOT KILL ANY CATS**, and defend your base from the incoming waves of sillies.
@@ -37,7 +37,8 @@ Place down towers that definitely **DO NOT KILL ANY CATS**, and defend your base
 │   ├── enemy.py
 │   ├── tabby.py
 │   ├── black.py
-│   └── rolling.py
+│   ├── rolling.py
+│   └── boss.py
 ├── towers
 │   ├── tower.py
 │   ├── crossbow.py

@@ -4,6 +4,7 @@ import os
 from mainmenu import MainMenu
 from game import Game
 from font import Font
+from enemies.enemy import Enemy
 
 
 def load_assets():
@@ -87,6 +88,14 @@ def load_assets():
         (420, 90)
     )
 
+    # enemy death particles
+    assets['death_particles'] = [
+        pygame.transform.scale(
+            pygame.image.load(os.path.join("assets", "enemies","death", f"death_particle{i + 1}.png")).convert_alpha(),
+            (128, 128)
+        ) for i in range(7)
+    ]
+
     return assets
 
 
@@ -99,6 +108,7 @@ def main():
 
     while True:
         menu = MainMenu(window, assets)
+        enemy = Enemy(assets)
         menu.fade_in(window)
         menu_result = menu.run()
 

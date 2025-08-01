@@ -32,7 +32,7 @@ class Game:
 
         self.lives = 10
         self.money = 200
-        self.round = 4
+        self.round = 0
         self.selected_tool = None
         self.towers = []
         self.round_active = False
@@ -63,6 +63,8 @@ class Game:
                 'pos': (self.game_width + 30, 160)
             }
         ]
+
+        self.assets = assets
 
         # Game background
         self.game_background = assets['game_background']
@@ -125,7 +127,7 @@ class Game:
 
         while running:
             mouse_pos = pygame.mouse.get_pos()
-            clock.tick(60)
+            dt = clock.tick(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return "quit"
@@ -197,6 +199,15 @@ class Game:
             for e in self.enemies:
                 if e.path_pos >= len(e.path) - 1:
                     to_delete.append(e)
+
+            for tower in self.towers:
+                tower.update(dt, self.enemies)
+
+            # Remove dead enemies
+            dead_enemies = [e for e in self.enemies if not e.alive and e.finished]
+            for enemy in dead_enemies:
+                self.enemies.remove(enemy)
+
             # Delete enemy once its off screen
             for d in to_delete:
                 self.enemies.remove(d)
@@ -277,14 +288,14 @@ class Game:
 
         if self.boss_round:
             for _ in range(boss_num_enemies):
-                wave_enemies.append(self.enemy_type_boss())
+                wave_enemies.append(self.enemy_type_boss(self.assets))
         else:
             available_enemies = [e['class'] for e in self.enemy_types if wave_num >= e['min-wave']]
             if not available_enemies:
                 available_enemies = [self.enemy_types[0]['class']]
             for _ in range(num_enemies):
                 enemy_class = random.choice(available_enemies)
-                wave_enemies.append(enemy_class())
+                wave_enemies.append(enemy_class(self.assets))
 
         return wave_enemies
 

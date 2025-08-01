@@ -10,11 +10,12 @@ class Enemy:
     """
     imgs = []
 
-    def __init__(self, animation_speed=10, movement_speed=3):
+    def __init__(self, assets, animation_speed=10, movement_speed=3):
         self.animation_speed = animation_speed
         self.movement_speed = movement_speed
         self.animation_count = 0
         self.health = 1
+        self.alive = True
         self.path = [(1056, 16), (1055, 61), (1054, 116), (1053, 183), (1050, 254), (1007, 283), (893, 275), (798, 276),
                      (643, 271), (489, 277), (334, 275), (229, 282), (180, 280), (147, 307), (155, 350), (173, 400),
                      (181, 456), (193, 543), (203, 612), (213, 693), (220, 749), (263, 770), (347, 775), (429, 780),
@@ -37,13 +38,26 @@ class Enemy:
         self.should_flip = False
         self.should_rotate = False
 
+        self.death_particles = assets['death_particles']
+        self.death_frame_duration = 3
+        self.death_frame = 0
+        self.death_timer = 0
+        self.death_effect_playing = False
+        self.finished = False
+
     def draw(self, window):
         """
         Draws the enemy on the given window.
         It updates the enemy's image based on the current animation frame and moves the enemy along its path by calling
         the move() method.
+        Rolling and Boss enemies transform according to the path and direction of movement.
         :param window: The Pygame window where the enemy will be drawn.
         """
+        # If the enemy is not alive, it plays the death effect.
+        if not self.alive:
+            self.play_death_particles(window)
+            return
+
         self.img = self.imgs[self.animation_count // self.animation_speed]
         self.animation_count += 1
         if self.animation_count >= len(self.imgs) * self.animation_speed:
@@ -126,7 +140,34 @@ class Enemy:
 
         return True
 
-    def hit(self):
-        self.health -= 1
+    def take_damage(self, damage):
+        """
+        Reduces the enemy's health by the specified damage amount.
+        If the health drops to zero or below, the enemy is marked as not alive.
+        :param damage: The amount of damage to apply to the enemy's health.
+        """
+        self.health -= damage
         if self.health <= 0:
-            return True
+            self.alive = False
+
+            self.death_frame = 0
+            self.death_timer = 0
+            self.finished = False
+
+    def play_death_particles(self, window):
+        """
+        Plays the death particles animation.
+        Each particle image is displayed for death_frame_duration frames before moving to the next.
+        """
+        if self.death_frame < len(self.death_particles):
+            particle_img = self.death_particles[self.death_frame]
+
+            particle_rect = particle_img.get_rect(center=(self.x, self.y + self.y_offset))
+            window.blit(particle_img, particle_rect.topleft)
+
+            self.death_timer += 1
+            if self.death_timer >= self.death_frame_duration:
+                self.death_timer = 0
+                self.death_frame += 1
+        else:
+            self.finished = True

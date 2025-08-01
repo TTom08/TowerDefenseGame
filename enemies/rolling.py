@@ -18,8 +18,8 @@ class Rolling(Enemy):
         ) for i in range(6)
     ]
 
-    def __init__(self):
-        super().__init__(animation_speed=5, movement_speed=5)
+    def __init__(self, assets):
+        super().__init__(assets, animation_speed=5, movement_speed=5)
         self.imgs = Rolling.imgs
         self.y_offset = -45
         self.health = 3

@@ -17,8 +17,8 @@ class Boss(Enemy):
         ) for i in range(2)
     ]
 
-    def __init__(self):
-        super().__init__(animation_speed=10, movement_speed=3)
+    def __init__(self, assets):
+        super().__init__(assets, animation_speed=10, movement_speed=3)
         self.imgs = Boss.imgs
         self.y_offset = 10
         self.health = 10
