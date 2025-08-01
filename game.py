@@ -1,4 +1,6 @@
 import math
+import os
+
 import pygame
 import random
 
@@ -63,6 +65,7 @@ class Game:
                 'pos': (self.game_width + 30, 160)
             }
         ]
+        self.selected_tower = None
 
         self.assets = assets
 
@@ -137,6 +140,14 @@ class Game:
                         if t['rect'].collidepoint(mouse_pos):
                             self.selected_tool = t['class'] if self.selected_tool != t['class'] else None
                             break
+
+                    # Check if a tower was clicked
+                    for tower in self.towers:
+                        if tower.click(mouse_pos[0], mouse_pos[1]):
+                                self.selected_tower = tower if self.selected_tower != tower else None
+                                break
+                    else:
+                        self.selected_tower = None
 
                     if self.start_button_rect.collidepoint(mouse_pos):
                         if self.selected_tool:
@@ -251,6 +262,9 @@ class Game:
                 if self.auto_start:
                     self.waiting_for_start = True
                     self.round_start_time = pygame.time.get_ticks()
+
+            if self.exit_menu_active:
+                self.selected_tool = None
 
             self.draw()
             pygame.display.flip()
@@ -383,6 +397,16 @@ class Game:
                                 scale=2)
             self.my_font.render(self.window, "PRESS ESC TO EXIT TO MAIN MENU",
                                 (self.game_width // 2 - 110, self.height // 2 + 200), scale=1)
+
+        # Draw range circle around the selected tower
+        if self.selected_tower:
+            scaled_range_circle = pygame.transform.scale(
+                self.selected_tower.tower_range_circle,
+                (self.selected_tower.range * 2, self.selected_tower.range * 2)  # Double the range for diameter
+            )
+            self.window.blit(scaled_range_circle,
+                             (self.selected_tower.x - self.selected_tower.range,
+                              self.selected_tower.y - self.selected_tower.range))
 
     def draw_exit_menu(self):
         # Display exit menu with transition

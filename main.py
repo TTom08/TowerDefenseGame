@@ -5,6 +5,7 @@ from mainmenu import MainMenu
 from game import Game
 from font import Font
 from enemies.enemy import Enemy
+from towers.tower import Tower
 
 
 def load_assets():
@@ -95,6 +96,9 @@ def load_assets():
             (128, 128)
         ) for i in range(7)
     ]
+
+    # tower range circle
+    assets['tower_range_circle'] = pygame.image.load(os.path.join("assets", "towers", "range_circle_64.png")).convert_alpha()
 
     return assets
 
