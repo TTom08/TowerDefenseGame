@@ -14,11 +14,21 @@ class Cannon(Tower):
     It inherits from the Tower class and sets specific properties for the cannon tower.
     """
 
-    tower_imgs = [
-        pygame.transform.scale(
-            pygame.image.load(os.path.join(base_path, "assets", "towers", f"cannon{i + 1}.png")).convert_alpha(),
-            (150, 150)
-        ) for i in range(4)
+    tower_animations = [
+        [
+            pygame.transform.scale(
+                pygame.image.load(
+                    os.path.join(base_path, "assets", "towers", f"cannon{i + 1}.png")).convert_alpha(),
+                (160, 160)
+            ) for i in range(4)
+        ],
+        [
+            pygame.transform.scale(
+                pygame.image.load(
+                    os.path.join(base_path, "assets", "towers", f"cannon_upg{i + 1}.png")).convert_alpha(),
+                (160, 160)
+            ) for i in range(4)
+        ]
     ]
     toolbar_icon = pygame.transform.scale(
         pygame.image.load(os.path.join(base_path, "assets", "ui", "toolbar_cannon.png")).convert_alpha(),
@@ -32,7 +42,6 @@ class Cannon(Tower):
 
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs = Cannon.tower_imgs
         self.range = 200
         self.price = Cannon.price
         self.damage = 2
@@ -41,6 +50,7 @@ class Cannon(Tower):
             pygame.image.load(os.path.join(base_path, "assets", "towers", "cannon_projectile.png")).convert_alpha(),
             (32, 32)
         )
+        self.tower_imgs = Cannon.tower_animations
 
     def shoot(self, enemy):
         """
@@ -57,3 +67,26 @@ class Cannon(Tower):
 
         projectile = Projectile(spawn_x, spawn_y, enemy, damage=self.damage, image=self.projectile_img)
         self.projectiles.append(projectile)
+
+    def draw(self, window):
+        """
+        Override draw to handle multi-level animations
+        """
+        if self.shooting and self.tower_shooting_frame < len(self.tower_imgs[self.level - 1]):
+            img = self.tower_imgs[self.level - 1][self.tower_shooting_frame]
+        else:
+            img = self.tower_imgs[self.level - 1][0]
+
+        rotated_img = pygame.transform.rotate(img, -self.last_rotation_angle)
+        rect = rotated_img.get_rect(center=(self.x, self.y))
+        window.blit(rotated_img, rect)
+
+        if self.selected:
+            self.draw_range(window)
+
+        for proj in self.projectiles:
+            proj.draw(window)
+
+    def upgrade(self):
+        if self.level < 2:
+            super().upgrade()

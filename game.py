@@ -1,5 +1,4 @@
 import math
-import os
 
 import pygame
 import random
@@ -33,7 +32,7 @@ class Game:
         self.width, self.height = window.get_size()
 
         self.lives = 10
-        self.money = 200
+        self.money = 2000
         self.round = 0
         self.selected_tool = None
         self.towers = []
@@ -142,13 +141,25 @@ class Game:
                             self.selected_tool = t['class'] if self.selected_tool != t['class'] else None
                             break
 
-                    # Check if a tower was clicked
-                    for tower in self.towers:
-                        if tower.click(mouse_pos[0], mouse_pos[1]):
+                    # Check if a tower was clicked with left click
+                    if event.button == 1 and self.selected_tool is None:
+                        for tower in self.towers:
+                            if tower.click(mouse_pos[0], mouse_pos[1]):
                                 self.selected_tower = tower if self.selected_tower != tower else None
                                 break
-                    else:
-                        self.selected_tower = None
+                        else:
+                            self.selected_tower = None
+
+                    if event.button == 3 and self.selected_tower:
+                        upgrade_cost = 100
+                        if self.selected_tower.level < 2:
+                            if self.money >= upgrade_cost:
+                                self.money -= upgrade_cost
+                                self.selected_tower.upgrade()
+                            else:
+                                self.show_message("NOT ENOUGH MONEY!", mouse_pos, duration=20)
+                        else:
+                            self.show_message("UPGRADED!", mouse_pos, duration=20)
 
                     if self.start_button_rect.collidepoint(mouse_pos):
                         if self.selected_tool:
@@ -341,11 +352,13 @@ class Game:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if mouse_x < self.game_width:
                 preview_tower = self.selected_tool(mouse_x, mouse_y)
-                preview_img = preview_tower.tower_imgs[preview_tower.level].copy()
+                preview_img = preview_tower.tower_imgs[0][0].copy()
                 if self.is_buildable(mouse_x, mouse_y) and not self.is_overlapping(mouse_x, mouse_y):
                     preview_img.set_alpha(128)
                 else:
-                    preview_img.fill((255, 0, 0, 128), special_flags=pygame.BLEND_RGBA_MULT)
+                    overlay = pygame.Surface(preview_img.get_size(), pygame.SRCALPHA)
+                    overlay.fill((255, 0, 0, 128))
+                    preview_img.blit(overlay, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
                     preview_tower.tower_range_circle.fill((220, 35, 35, 144), special_flags=pygame.BLEND_RGBA_MULT)
                 rect = preview_img.get_rect(center=(mouse_x, mouse_y))
                 self.window.blit(preview_img, rect)
@@ -411,6 +424,9 @@ class Game:
             self.window.blit(scaled_range_circle,
                              (self.selected_tower.x - self.selected_tower.range,
                               self.selected_tower.y - self.selected_tower.range))
+
+        if self.selected_tower is not None:
+            self.my_font.render(self.window, "PRESS RIGHT MOUSE BUTTON TO UPGRADE", (75, 900), scale=3)
 
     def draw_exit_menu(self):
         # Display exit menu with transition

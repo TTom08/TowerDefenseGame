@@ -16,7 +16,7 @@ class Tower:
         self.x = x
         self.y = y
         self.price = 0
-        self.level = 0
+        self.level = 1
         self.selected = False
         self.menu = None
         self.range = 100
@@ -47,13 +47,16 @@ class Tower:
         If the tower is selected it also draws the range circle around it.
         :param window: The Pygame window where the tower will be drawn.
         """
-        if self.shooting and self.tower_shooting_frame < len(self.tower_imgs):
-            img = self.tower_imgs[self.tower_shooting_frame]
+        current_level_frames = self.tower_imgs[self.level - 1]
+
+        # Get the current frame
+        if self.shooting and self.tower_shooting_frame < len(current_level_frames):
+            current_frame = current_level_frames[self.tower_shooting_frame]
         else:
-            img = self.tower_imgs[0]
+            current_frame = current_level_frames[0]
 
         # Rotate the image based on the last rotation angle
-        rotated_img = pygame.transform.rotate(img, -self.last_rotation_angle)
+        rotated_img = pygame.transform.rotate(current_frame, -self.last_rotation_angle)
 
         rect = rotated_img.get_rect(center=(self.x, self.y))
         window.blit(rotated_img, rect)
@@ -83,7 +86,9 @@ class Tower:
         :param x: The x-coordinate of the click.
         :param y: The y-coordinate of the click.
         """
-        img = self.tower_imgs[self.level]
+        current_level_frames = self.tower_imgs[self.level - 1]
+        img = current_level_frames[0]
+
         rect = img.get_rect(center=(self.x, self.y))
         return rect.collidepoint(x, y)
 
@@ -132,7 +137,7 @@ class Tower:
             if self.animation_timer >= self.animation_cd:
                 self.tower_shooting_frame += 1
                 self.animation_timer = 0
-                if self.tower_shooting_frame >= len(self.tower_imgs):
+                if self.tower_shooting_frame >= len(self.tower_imgs[self.level - 1]):
                     self.tower_shooting_frame = 0
                     self.shooting = False
 
@@ -162,3 +167,18 @@ class Tower:
             angle_deg += 360
 
         return (angle_deg - 90) % 360
+
+    def update_range_circle(self):
+        self.tower_range_circle = pygame.transform.scale(
+            pygame.image.load(os.path.join("assets", "towers", "range_circle_64.png")).convert_alpha(),
+            (self.range, self.range)
+        )
+        self.tower_range_circle.set_alpha(144)
+
+    def upgrade(self):
+        if self.level < 2 and len(self.tower_imgs) > self.level:
+            self.level += 1
+            self.range += 100
+            self.shoot_cooldown -= 450
+            self.animation_cd = 150 - ((150 / 7) * 3)
+            self.update_range_circle()
