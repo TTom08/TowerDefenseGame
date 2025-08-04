@@ -32,7 +32,7 @@ class Game:
         self.width, self.height = window.get_size()
 
         self.lives = 10
-        self.money = 2000
+        self.money = 200
         self.round = 0
         self.selected_tool = None
         self.towers = []
@@ -136,12 +136,13 @@ class Game:
                     return "quit"
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Checks if a tool is selected
                     for t in self.available_towers:
                         if t['rect'].collidepoint(mouse_pos):
                             self.selected_tool = t['class'] if self.selected_tool != t['class'] else None
                             break
 
-                    # Check if a tower was clicked with left click
+                    # Check if a tower was clicked with left click and selects it or deselects it
                     if event.button == 1 and self.selected_tool is None:
                         for tower in self.towers:
                             if tower.click(mouse_pos[0], mouse_pos[1]):
@@ -150,6 +151,7 @@ class Game:
                         else:
                             self.selected_tower = None
 
+                    # Upgrade tower with right click
                     if event.button == 3 and self.selected_tower:
                         upgrade_cost = 100
                         if self.selected_tower.level < 2:
@@ -157,13 +159,13 @@ class Game:
                                 self.money -= upgrade_cost
                                 self.selected_tower.upgrade()
                             else:
-                                self.show_message("NOT ENOUGH MONEY!", mouse_pos, duration=20)
+                                self.show_message("NOT ENOUGH MONEY!", (mouse_pos[0] + 15, mouse_pos[1] - 3), duration=20)
                         else:
-                            self.show_message("UPGRADED!", mouse_pos, duration=20)
+                            self.show_message("UPGRADED!", (mouse_pos[0] + 15, mouse_pos[1] - 3), duration=20)
 
                     if self.start_button_rect.collidepoint(mouse_pos):
                         if self.selected_tool:
-                            print("Please place a tower before starting the game!")
+                            self.show_message("TOOL IS SELECTED!", (mouse_pos[0] - 350, mouse_pos[1] - 3), duration=20)
                         else:
                             if not self.round_active and not self.waiting_for_start:
                                 if self.auto_start:
@@ -195,6 +197,7 @@ class Game:
                                 self.show_message("INVALID BUILD LOCATION!", (mouse_pos[0] + 15, mouse_pos[1] - 3),
                                                   duration=20)
 
+                    # Handles exit menu interactions
                     if self.exit_menu_scale > 0.95:
                         if self.exit_btn_rect.collidepoint(mouse_pos):
                             self.fade_out(window)
@@ -309,6 +312,11 @@ class Game:
         return False
 
     def generate_wave(self, wave_num):
+        """
+        Generates a wave of enemies based on the current wave number.
+        :param wave_num: The current wave number.
+        :return: A list of enemy instances for the current wave.
+        """
         wave_enemies = []
         num_enemies = 5 + wave_num * 2
         boss_num_enemies = 1 + math.floor(wave_num * 0.25)
@@ -404,6 +412,7 @@ class Game:
                     continue
                 self.my_font.render(self.window, msg['text'], msg['pos'], scale=2, alpha=msg['alpha'])
 
+        # If the game is over, display the game over screen
         if self.game_over:
             overlay = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             overlay.fill((50, 50, 50, 180))

@@ -11,7 +11,6 @@ base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 class Cannon(Tower):
     """
     Cannon tower class that represents a cannon tower in the game.
-    It inherits from the Tower class and sets specific properties for the cannon tower.
     """
 
     tower_animations = [

@@ -157,6 +157,11 @@ class Tower:
                 self.shooting = False
 
     def get_angle_to_enemy(self, enemy):
+        """
+        Calculates the angle from the tower to the enemy in degrees.
+        :param enemy: The enemy object to calculate the angle to.
+        :return: The angle in degrees from the tower to the enemy.
+        """
         dx = enemy.x - self.x
         dy = enemy.y - self.y
 
@@ -169,6 +174,9 @@ class Tower:
         return (angle_deg - 90) % 360
 
     def update_range_circle(self):
+        """
+        Updates the range circle image based on the current range of the tower.
+        """
         self.tower_range_circle = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "towers", "range_circle_64.png")).convert_alpha(),
             (self.range, self.range)
@@ -176,6 +184,9 @@ class Tower:
         self.tower_range_circle.set_alpha(144)
 
     def upgrade(self):
+        """
+        Upgrades the tower to the next level, increasing its range and decreasing its shooting cooldown.
+        """
         if self.level < 2 and len(self.tower_imgs) > self.level:
             self.level += 1
             self.range += 100

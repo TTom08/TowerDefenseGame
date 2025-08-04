@@ -2,6 +2,9 @@ import pygame
 import math
 
 class Projectile:
+    """
+    Projectile class that represents a projectile fired by a tower towards an enemy.
+    """
     def __init__(self, x, y, enemy, speed=400, damage=1, image=None):
         self.x = x
         self.y = y
@@ -22,6 +25,10 @@ class Projectile:
             self.direction_y = dy / distance
 
     def update(self, dt):
+        """
+        Updates the projectile's position based on its speed and direction.
+        :param dt: Time delta since the last update in milliseconds.
+        """
         dt = dt / 1000.0
         if not self.enemy.alive:
             self.alive = False
