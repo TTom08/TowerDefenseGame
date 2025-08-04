@@ -24,3 +24,4 @@ class Rolling(Enemy):
         self.y_offset = -45
         self.health = 3
         self.should_flip = True
+        self.value = 25

@@ -42,6 +42,7 @@ class Game:
         self.enemies = []
         self.upcoming_enemies = []
         self.spawn_delay = 2000
+        self.spawn_delay_cap = 500
         self.last_spawn_time = 0
 
         self.round_start_delay = 2000
@@ -218,6 +219,7 @@ class Game:
             dead_enemies = [e for e in self.enemies if not e.alive and e.finished]
             for enemy in dead_enemies:
                 self.enemies.remove(enemy)
+                self.money += enemy.value
 
             # Delete enemy once its off screen
             for d in to_delete:
@@ -262,6 +264,8 @@ class Game:
                 if self.auto_start:
                     self.waiting_for_start = True
                     self.round_start_time = pygame.time.get_ticks()
+                    while self.spawn_delay == self.spawn_delay_cap:
+                        self.spawn_delay -= 50
 
             if self.exit_menu_active:
                 self.selected_tool = None

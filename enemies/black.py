@@ -22,3 +22,4 @@ class Black(Enemy):
         self.imgs = Black.imgs
         self.y_offset = -45
         self.health = 3
+        self.value = 20

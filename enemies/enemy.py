@@ -15,6 +15,7 @@ class Enemy:
         self.movement_speed = movement_speed
         self.animation_count = 0
         self.health = 1
+        self.value = 10
         self.alive = True
         self.path = [(1056, 16), (1055, 61), (1054, 116), (1053, 183), (1050, 254), (1007, 283), (893, 275), (798, 276),
                      (643, 271), (489, 277), (334, 275), (229, 282), (180, 280), (147, 307), (155, 350), (173, 400),

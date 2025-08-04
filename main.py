@@ -35,7 +35,7 @@ def load_assets():
     )
     assets['placement_mask'] = pygame.transform.scale(
         pygame.image.load(os.path.join("assets", "other", "placement_mask.png")).convert(),
-        (1500, 960)
+        (1280, 960)
     )
     assets['statbar_bg'] = pygame.transform.scale(
         pygame.image.load(os.path.join("assets", "ui", "statbar.png")).convert_alpha(),

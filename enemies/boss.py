@@ -23,3 +23,4 @@ class Boss(Enemy):
         self.y_offset = 10
         self.health = 10
         self.should_rotate = True
+        self.value = 50
