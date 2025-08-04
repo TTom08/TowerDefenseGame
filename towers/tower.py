@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import os.path
 
@@ -30,6 +32,8 @@ class Tower:
 
         self.projectile_img = None
         self.projectiles = []
+        self.current_target = None
+        self.last_rotation_angle = 0
 
         self.tower_range_circle = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "towers", "range_circle_64.png")).convert_alpha(),
@@ -48,8 +52,11 @@ class Tower:
         else:
             img = self.tower_imgs[0]
 
-        rect = img.get_rect(center=(self.x, self.y))
-        window.blit(img, rect)
+        # Rotate the image based on the last rotation angle
+        rotated_img = pygame.transform.rotate(img, -self.last_rotation_angle)
+
+        rect = rotated_img.get_rect(center=(self.x, self.y))
+        window.blit(rotated_img, rect)
 
         if self.selected:
             self.draw_range(window)
@@ -132,8 +139,26 @@ class Tower:
         if self.time_since_last_shot >= self.shoot_cooldown:
             target = self.find_target(enemies)
             if target:
+                self.current_target = target
+                self.rotation_angle = self.get_angle_to_enemy(target)
+                self.last_rotation_angle = self.rotation_angle
                 self.shooting = True
                 self.tower_shooting_frame = 0
                 self.animation_timer = 0
                 self.shoot(target)
                 self.time_since_last_shot = 0
+            else:
+                self.current_target = None
+                self.shooting = False
+
+    def get_angle_to_enemy(self, enemy):
+        dx = enemy.x - self.x
+        dy = enemy.y - self.y
+
+        angle_deg = math.degrees(math.atan2(dy, dx))
+
+        # Smooth transition across the 180°/-180° boundary
+        if angle_deg < -90:
+            angle_deg += 360
+
+        return (angle_deg - 90) % 360

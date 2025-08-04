@@ -32,8 +32,7 @@ class Crossbow(Tower):
         self.tower_imgs = Crossbow.tower_imgs
         self.range = 150
         self.price = Crossbow.price
-        self.shoot_cooldown = 1500
         self.projectile_img = pygame.transform.scale(
             pygame.image.load(os.path.join(base_path, "assets", "towers", "crossbow_projectile.png")).convert_alpha(),
-            (32, 32)
+            (48, 48)
         )

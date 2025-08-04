@@ -35,6 +35,8 @@ class Cannon(Tower):
         self.tower_imgs = Cannon.tower_imgs
         self.range = 200
         self.price = Cannon.price
+        self.damage = 2
+        self.shoot_cooldown = 1500
         self.projectile_img = pygame.transform.scale(
             pygame.image.load(os.path.join(base_path, "assets", "towers", "cannon_projectile.png")).convert_alpha(),
             (32, 32)
@@ -48,8 +50,8 @@ class Cannon(Tower):
         dy = enemy.y - self.y
         angle = math.atan2(dy, dx)
 
-        offset_x = math.cos(angle) * 80
-        offset_y = math.sin(angle) * 80
+        offset_x = math.cos(angle) * 70
+        offset_y = math.sin(angle) * 70
         spawn_x = self.x + offset_x
         spawn_y = self.y + offset_y
 
