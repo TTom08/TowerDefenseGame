@@ -13,9 +13,9 @@ class Crossbow(Tower):
     """
     tower_imgs = [
         pygame.transform.scale(
-            pygame.image.load(os.path.join(base_path, "assets", "towers", "crossbow1.png")).convert_alpha(),
+            pygame.image.load(os.path.join(base_path, "assets", "towers", f"crossbow{i + 1}.png")).convert_alpha(),
             (160, 160)
-        )
+        ) for i in range(6)
     ]
     toolbar_icon = pygame.transform.scale(
         pygame.image.load(os.path.join(base_path, "assets", "ui", "toolbar_crossbow.png")).convert_alpha(),
@@ -32,3 +32,8 @@ class Crossbow(Tower):
         self.tower_imgs = Crossbow.tower_imgs
         self.range = 150
         self.price = Crossbow.price
+        self.shoot_cooldown = 1500
+        self.projectile_img = pygame.transform.scale(
+            pygame.image.load(os.path.join(base_path, "assets", "towers", "crossbow_projectile.png")).convert_alpha(),
+            (32, 32)
+        )

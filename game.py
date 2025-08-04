@@ -33,7 +33,7 @@ class Game:
         self.width, self.height = window.get_size()
 
         self.lives = 10
-        self.money = 200
+        self.money = 300
         self.round = 0
         self.selected_tool = None
         self.towers = []

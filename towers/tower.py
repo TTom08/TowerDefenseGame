@@ -1,6 +1,8 @@
 import pygame
 import os.path
 
+from towers.projectile import Projectile
+
 
 class Tower:
     """
@@ -17,8 +19,17 @@ class Tower:
         self.menu = None
         self.range = 100
         self.damage = 1
-        self.shoot_cooldown = 1000
+        self.shoot_cooldown = 1050
         self.time_since_last_shot = 0
+
+        self.tower_imgs = []
+        self.shooting = False
+        self.tower_shooting_frame = 0
+        self.animation_cd = 150
+        self.animation_timer = 0
+
+        self.projectile_img = None
+        self.projectiles = []
 
         self.tower_range_circle = pygame.transform.scale(
             pygame.image.load(os.path.join("assets", "towers", "range_circle_64.png")).convert_alpha(),
@@ -32,12 +43,19 @@ class Tower:
         If the tower is selected it also draws the range circle around it.
         :param window: The Pygame window where the tower will be drawn.
         """
-        img = self.tower_imgs[self.level]
+        if self.shooting and self.tower_shooting_frame < len(self.tower_imgs):
+            img = self.tower_imgs[self.tower_shooting_frame]
+        else:
+            img = self.tower_imgs[0]
+
         rect = img.get_rect(center=(self.x, self.y))
         window.blit(img, rect)
 
         if self.selected:
             self.draw_range(window)
+
+        for proj in self.projectiles:
+            proj.draw(window)
 
     def draw_range(self, window):
         """
@@ -84,10 +102,10 @@ class Tower:
 
     def shoot(self, enemy):
         """
-        Simulates shooting at an enemy by reducing its health.
-        This method should be called when the tower is ready to shoot.
+        Spawns a projectile toward the enemy.
         """
-        enemy.take_damage(self.damage)
+        projectile = Projectile(self.x, self.y, enemy, damage=self.damage, image=self.projectile_img)
+        self.projectiles.append(projectile)
 
     def update(self, dt, enemies):
         """
@@ -96,8 +114,26 @@ class Tower:
         :param enemies: A list of enemy objects to check against the tower's range.
         """
         self.time_since_last_shot += dt
+        self.animation_timer += dt
+
+        for proj in self.projectiles[:]:
+            proj.update(dt)
+            if not proj.alive:
+                self.projectiles.remove(proj)
+
+        if self.shooting:
+            if self.animation_timer >= self.animation_cd:
+                self.tower_shooting_frame += 1
+                self.animation_timer = 0
+                if self.tower_shooting_frame >= len(self.tower_imgs):
+                    self.tower_shooting_frame = 0
+                    self.shooting = False
+
         if self.time_since_last_shot >= self.shoot_cooldown:
             target = self.find_target(enemies)
             if target:
+                self.shooting = True
+                self.tower_shooting_frame = 0
+                self.animation_timer = 0
                 self.shoot(target)
                 self.time_since_last_shot = 0
