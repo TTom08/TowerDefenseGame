@@ -107,6 +107,7 @@ def main():
     pygame.init()
 
     window = pygame.display.set_mode((1500, 960))
+    pygame.display.set_caption("Silly Cat Game")
 
     assets = load_assets()
 

@@ -72,9 +72,6 @@ class Cannon(Tower):
         """
         Override draw to handle multi-level animations
         """
-        if self.is_upgrading:
-            super().draw(window)
-            return
 
         if self.shooting and self.tower_shooting_frame < len(self.tower_imgs[self.level - 1]):
             img = self.tower_imgs[self.level - 1][self.tower_shooting_frame]
@@ -84,6 +81,11 @@ class Cannon(Tower):
         rotated_img = pygame.transform.rotate(img, -self.last_rotation_angle)
         rect = rotated_img.get_rect(center=(self.x, self.y))
         window.blit(rotated_img, rect)
+
+        if self.is_upgrading:
+            frame = self.upg_animation_imgs[self.upg_animation_frame]
+            frame_rect = frame.get_rect(center=(self.x, self.y))
+            window.blit(frame, frame_rect)
 
         if self.selected:
             self.draw_range(window)
