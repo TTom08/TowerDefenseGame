@@ -41,12 +41,33 @@ class Tower:
         )
         self.tower_range_circle.set_alpha(144)
 
+        self.is_upgrading = False
+        self.upg_animation_frame = 0
+        self.upg_animation_timer = 0
+        self.upg_animation_cd = 100
+
+        self.upg_animation_imgs = [
+            pygame.transform.scale(
+                pygame.image.load(
+                    os.path.join("assets", "towers", "upg_animation", f"upg_animation{i}.png")).convert_alpha(),
+                (160, 160)
+            ) for i in range(1, 9)
+        ]
+
     def draw(self, window):
         """
         Draws the tower on the given window.
         If the tower is selected it also draws the range circle around it.
         :param window: The Pygame window where the tower will be drawn.
         """
+        print("Tower draw() called")
+
+        if self.is_upgrading:
+            frame = self.upg_animation_imgs[self.upg_animation_frame]
+            rect = frame.get_rect(center=(self.x, self.y))
+            window.blit(frame, rect)
+            return
+
         current_level_frames = self.tower_imgs[self.level - 1]
 
         # Get the current frame
@@ -133,6 +154,16 @@ class Tower:
             if not proj.alive:
                 self.projectiles.remove(proj)
 
+        if self.is_upgrading:
+            self.upg_animation_timer += dt
+            if self.upg_animation_timer >= self.upg_animation_cd:
+                self.upg_animation_frame += 1
+                self.upg_animation_timer -= self.upg_animation_cd
+                if self.upg_animation_frame >= len(self.upg_animation_imgs):
+                    self.is_upgrading = False
+                    self.upg_animation_frame = 0
+            return
+
         if self.shooting:
             if self.animation_timer >= self.animation_cd:
                 self.tower_shooting_frame += 1
@@ -193,3 +224,12 @@ class Tower:
             self.animation_cd = 100  # 100ms × 7 = 700ms total animation
             self.shoot_cooldown = self.animation_cd * len(self.tower_imgs[self.level - 1])
             self.update_range_circle()
+            self.play_upgrade_animation()
+
+    def play_upgrade_animation(self):
+        """
+        Plays the upgrade animation for the tower.
+        """
+        self.is_upgrading = True
+        self.upg_animation_frame = 0
+        self.upg_animation_timer = 0

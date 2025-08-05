@@ -153,7 +153,7 @@ class Game:
 
                     # Upgrade tower with right click
                     if event.button == 3 and self.selected_tower:
-                        upgrade_cost = 100
+                        upgrade_cost = 200
                         if self.selected_tower.level < 2:
                             if self.money >= upgrade_cost:
                                 self.money -= upgrade_cost

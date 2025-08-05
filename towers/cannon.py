@@ -71,6 +71,10 @@ class Cannon(Tower):
         """
         Override draw to handle multi-level animations
         """
+        if self.is_upgrading:
+            super().draw(window)
+            return
+
         if self.shooting and self.tower_shooting_frame < len(self.tower_imgs[self.level - 1]):
             img = self.tower_imgs[self.level - 1][self.tower_shooting_frame]
         else:
