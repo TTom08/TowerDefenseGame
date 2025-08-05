@@ -104,6 +104,9 @@ def load_assets():
 
 
 def main():
+    """
+    Main function to initialize the game, load assets, and run the main menu and game loop.
+    """
     pygame.init()
 
     window = pygame.display.set_mode((1500, 960))

@@ -22,6 +22,10 @@ class MainMenu:
         self.my_font = assets['my_font']
 
     def run(self):
+        """
+        Initializes the main menu and sets up the necessary variables and assets.
+        This method is called when the game is opened.
+        """
         running = True
         clock = pygame.time.Clock()
 
@@ -45,6 +49,9 @@ class MainMenu:
             pygame.display.flip()
 
     def draw(self):
+        """
+        Draws the main menu background, buttons, and title text.
+        """
         self.window.blit(self.menu_background, (0, 0))
         self.window.blit(self.menu_ui_bg, (0, self.height // 2 - 240))
 
@@ -62,6 +69,11 @@ class MainMenu:
         self.my_font.render(self.window, "SILLY CAT GAME", (100, 158), scale=6)
 
     def fade_out(self, window, speed=10):
+        """
+        Fades out the game window to black.
+        :param window: The Pygame window to fade out.
+        :param speed: The speed of the fade effect (default is 10).
+        """
         fade = pygame.Surface(window.get_size()).convert_alpha()
         fade.fill((0, 0, 0, 0))
         clock = pygame.time.Clock()
@@ -76,6 +88,11 @@ class MainMenu:
             clock.tick(60)
 
     def fade_in(self, window, speed=5):
+        """
+        Fades in the game window to black.
+        :param window: The Pygame window to fade in.
+        :param speed: The speed of the fade effect (default is 5).
+        """
         fade = pygame.Surface(window.get_size()).convert_alpha()
         fade.fill((0, 0, 0, 255))
         clock = pygame.time.Clock()

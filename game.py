@@ -32,8 +32,8 @@ class Game:
         self.width, self.height = window.get_size()
 
         self.lives = 10
-        self.money = 2000
-        self.round = 9
+        self.money = 200
+        self.round = 0
         self.selected_tool = None
         self.towers = []
         self.round_active = False
@@ -163,6 +163,7 @@ class Game:
                         else:
                             self.show_message("UPGRADED!", (mouse_pos[0] + 15, mouse_pos[1] - 3), duration=20)
 
+                    # Starting the game - start button logic
                     if self.start_button_rect.collidepoint(mouse_pos):
                         if self.selected_tool:
                             self.show_message("TOOL IS SELECTED!", (mouse_pos[0] - 350, mouse_pos[1] - 3), duration=20)
@@ -447,6 +448,9 @@ class Game:
             self.my_font.render(self.window, "PRESS X TO SELL", (550, 930), scale=1.5)
 
     def draw_exit_menu(self):
+        """
+        Draws the exit menu with buttons to exit or continue the game.
+        """
         # Display exit menu with transition
         scale_speed = 0.3
         if self.exit_menu_scale < self.exit_menu_target_scale:
@@ -494,6 +498,11 @@ class Game:
         })
 
     def fade_out(self, window, speed=10):
+        """
+        Fades out the game window to black.
+        :param window: The Pygame window to fade out.
+        :param speed: The speed of the fade effect (default is 10).
+        """
         fade = pygame.Surface(window.get_size()).convert_alpha()
         fade.fill((0, 0, 0, 0))
         clock = pygame.time.Clock()
@@ -508,6 +517,11 @@ class Game:
             clock.tick(60)
 
     def fade_in(self, window, speed=5):
+        """
+        Fades in the game window to black.
+        :param window: The Pygame window to fade in.
+        :param speed: The speed of the fade effect (default is 5).
+        """
         fade = pygame.Surface(window.get_size()).convert_alpha()
         fade.fill((0, 0, 0, 255))
         clock = pygame.time.Clock()
