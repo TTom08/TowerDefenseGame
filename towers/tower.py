@@ -141,7 +141,7 @@ class Tower:
                     self.tower_shooting_frame = 0
                     self.shooting = False
 
-        if self.time_since_last_shot >= self.shoot_cooldown:
+        if self.time_since_last_shot >= self.shoot_cooldown and not self.shooting:
             target = self.find_target(enemies)
             if target:
                 self.current_target = target
@@ -190,6 +190,6 @@ class Tower:
         if self.level < 2 and len(self.tower_imgs) > self.level:
             self.level += 1
             self.range += 100
-            self.shoot_cooldown -= 450
-            self.animation_cd = 150 - ((150 / 7) * 3)
+            self.animation_cd = 100  # 100ms × 7 = 700ms total animation
+            self.shoot_cooldown = self.animation_cd * len(self.tower_imgs[self.level - 1])
             self.update_range_circle()
