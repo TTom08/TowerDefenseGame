@@ -212,6 +212,14 @@ class Game:
                         self.exit_menu_active = not self.exit_menu_active
                         self.exit_menu_target_scale = 1.0 if self.exit_menu_active else 0.0
 
+                # Sell the selected tower
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_x:
+                        if self.selected_tower:
+                            self.money += self.selected_tower.sell_price
+                            self.towers.remove(self.selected_tower)
+                            self.selected_tower = None
+
                 # Restart the game if game over
                 if self.game_over and event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     return "restart"
@@ -435,7 +443,8 @@ class Game:
                               self.selected_tower.y - self.selected_tower.range))
 
         if self.selected_tower is not None:
-            self.my_font.render(self.window, "PRESS RIGHT MOUSE BUTTON TO UPGRADE", (75, 900), scale=3)
+            self.my_font.render(self.window, "PRESS RIGHT MOUSE BUTTON TO UPGRADE", (75, 880), scale=3)
+            self.my_font.render(self.window, "PRESS X TO SELL", (550, 930), scale=1.5)
 
     def draw_exit_menu(self):
         # Display exit menu with transition

@@ -41,6 +41,7 @@ class Crossbow(Tower):
         super().__init__(x, y)
         self.range = 150
         self.price = Crossbow.price
+        self.sell_price = int(0.1 * self.price)
         self.projectile_img = pygame.transform.scale(
             pygame.image.load(os.path.join(base_path, "assets", "towers", "crossbow_projectile.png")).convert_alpha(),
             (48, 48)

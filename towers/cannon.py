@@ -43,6 +43,7 @@ class Cannon(Tower):
         super().__init__(x, y)
         self.range = 200
         self.price = Cannon.price
+        self.sell_price = int(0.1 * self.price)
         self.damage = 2
         self.shoot_cooldown = 1500
         self.projectile_img = pygame.transform.scale(

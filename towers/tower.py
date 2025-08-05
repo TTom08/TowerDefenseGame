@@ -21,6 +21,7 @@ class Tower:
         self.menu = None
         self.range = 100
         self.damage = 1
+        self.sell_price = 0.1 * self.price
         self.shoot_cooldown = 1050
         self.time_since_last_shot = 0
 
